@@ -1,0 +1,15 @@
+#+title:  Emacs RPG Toolkit
+#+author: Howard Abrams
+#+email:  howard@sting
+#+date:   2023-10-01 October
+#+tags:   emacs rpg solottrpg
+
+This project supplies a collection of functions in Emacs Lisp to allow developers to more easily craft RPG-inspired programs, especially Solo RPGs played in Org-formatted files.
+
+Different /subjects/ are stored in different files, described in each of the following sections.
+* Dice Rollers
+The basis of most games are random numbers, and RPGs have depended on dice. The [[file:rpgtk-dice.el][rpgtk-dice]] file contains functions for rolling dice, and displaying the results.
+
+The function, =rpgtk-roll=, is the primary interface, as it rolls a dice based on a /dice expression/, e.g. =2d6+4=, at the point location or from a prompt from the user.
+
+Other interesting functions are =rpgtk-roll-again= (to re-roll what was previously rolled), and =rpgtk-forward-roll= that moves the point to the next dice expression in the current buffer.
