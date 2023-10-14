@@ -33,6 +33,9 @@
 
 ;;; Code:
 
+(add-to-list 'load-path
+             (file-name-directory (buffer-file-name)))
+
 (require 'rpgtk-dice)
 
 (defun rpgtk-repeatedly (fn args times)
@@ -48,142 +51,125 @@ Return a list of results."
 ;; make sure that at least one roll was at each end. This should be
 ;; _good enough_.
 
-(defun rpgtk--test-rolls (fn args min max)
+(defun rpgtk-dice--test-rolls (fn args min max)
   "Run function FN with ARGS to validate all results.
 The numbers returned should be between MIN and MAX, with an
 average value of AVG, if given."
   (let ((rolls (rpgtk-repeatedly fn args 1000)))
-    (should (--some?  (= it min) rolls))
-    (should (--some?  (= it max) rolls))
-    (should (--every? (>= it min) rolls))
-    (should (--every? (<= it max) rolls))))
-
-(defun rpgtk--test-roll-series (fn args min max)
-  "Run function FN with ARGS to validate all results.
-The numbers returned should be between MIN and MAX, with an
-average value of AVG, if given."
-  (let ((roll-sums (->> (repeatedly fn args 1000)
-                        (-map 'rpgtk--sum))))
-    ;; (should (--some?  (= it min) roll-sums))
-    ;; (should (--some?  (= it max) roll-sums))
-    (should (--every? (>= it min) roll-sums))
-    (should (--every? (<= it max) roll-sums))))
-
-(ert-deftest rpgtk--roll-test ()
-  (let ((test-data '(((1 6) 1 6)
-                     ((3 6 4) 7 22)
-                     ((4 6 4 "-") 0 20))))
-    (dolist (test-seq test-data)
-      (destructuring-bind (dice-args lowest highest) test-seq
-        (rpgtk--test-roll-series 'rpgtk--roll dice-args lowest highest)))))
+    (should (= (seq-min rolls) min))
+    (should (= (seq-max rolls) max))))
 
 ;; ----------------------------------------------------------------------
 
-(ert-deftest rpgtk--roll-dice-test ()
+(ert-deftest rpgtk-dice-roll-dice-test ()
   "Validate the `rpgtk--roll-dice' by making sure we get a list
 of all die rolls, and that each number is within the range.
 We can assume that `rpgtk--roll-dice' works."
-  (let ((results (rpgtk--roll-dice 4 6)))
+  (let ((results (rpgtk-dice-roll 4 6)))
     (should (= (length results) 4))
     (should (--every? (>= it 1) results))
     (should (--every? (<= it 6) results))))
 
-(ert-deftest rpgtk-roll-test ()
-  "We roll 4d6+3, but call `rpgtk-roll' in different ways."
-  (let ((results (rpgtk-roll 4 6)))
-    (should (= 4 (length (car results))))
-    (should (= 0 (cdr results))))
-  (let ((results (rpgtk-roll 4 6 3)))
-    (should (= 4 (length (car results))))
-    (should (= 3 (cdr results))))
-  (let ((results (rpgtk-roll 4 6 3 "+")))
-    (should (= 4 (length (car results))))
-    (should (= 3 (cdr results))))
-  (let ((results (rpgtk-roll 4 6 3 "-")))
-    (should (= 4 (length (car results))))
-    (should (= -3 (cdr results)))))
+;; ----------------------------------------------------------------------
 
-(ert-deftest rpgtk-roll-with-choice-test ()
-  (let* ((high3 (lambda (rolls)
-                  (seq-take (seq-sort #'> rolls) 3)))
-         (rolls (rpgtk--roll-with-choice 4 6 high3)))
-    (should (= 3 (length (car rolls))))
-    (should (= 0 (cdr rolls))))
-  (let* ((disadv (lambda (rolls)
-                  (seq-take (seq-sort #'< rolls) 1)))
-         (rolls (rpgtk--roll-with-choice 2 20 disadv)))
-    (should (= 1 (length (car rolls))))
-    (should (= 0 (cdr rolls)))))
+(ert-deftest rpgtk-dice--split-roll-mods-test ()
+  (should
+   (equal (rpgtk-dice--split-roll-mods '(:foo 3 4 :bar 7 :baz))
+          '(:foo (3 4) (:bar 7 :baz))))
+  (should
+   (equal (rpgtk-dice--split-roll-mods '(:foo 7))
+          '(:foo (7) nil)))
+  (should
+   (equal (rpgtk-dice--split-roll-mods '(:foo))
+          '(:foo nil nil)))
+  (should
+   (equal (rpgtk-dice--split-roll-mods nil)
+          '(nil nil nil))))
 
-(ert-deftest rpgtk-roll-highest-test ()
-  (let ((advang (rpgtk-roll-highest 2 20 1)))
-    (should (= 1 (length (car advang))))))
+(ert-deftest rpgtk-dice-roll-mod-test ()
+  ;; D&D Style: 4d6+4
+  (let ((rolls (rpgtk-dice-roll-mod '(1 4 2 3)
+                           :sum
+                           :add 4
+                           :sum)))
+    ;; we should get the original dice roll, plus 3 transforms:
+    (should (= 4 (length rolls)))
+    (should (= 10 (car (nth 1 rolls))))
+    (should (= 14 (car (nth 3 rolls)))))
 
-(ert-deftest rpgtk-roll-lowest-test ()
-  (let ((advang (rpgtk-roll-lowest 2 20 1)))
-    (should (= 1 (length (car advang))))))
+  ;; What about a Blades in the Dark roll:
+  (let ((rolls (rpgtk-dice-roll-mod '(1 4 2 3) :max)))
+    (should (equal '(4)  (nth 1 rolls))))
 
-(ert-deftest rpgtk--sum-test ()
-  (should (= (rpgtk--sum '((1 6) . 3)) 10))
-  (should (= (rpgtk--sum '((6) . -3)) 3))
-  (should (= (rpgtk--sum '(() . 0)) 0)))
+  ;; Test the top function for 4d6 with topk of 3:
+  (let* ((rolls (rpgtk-dice-roll-mod '(1 4 2 3) :top 3)))
+    (should (equal '(4 3 2) (nth 1 rolls))))
 
-(ert-deftest rpgtk--expression-parts-test ()
-  (should (equal (rpgtk--expression-parts "d20") '(1 20 0)))
-  (should (equal (rpgtk--expression-parts "3d6") '(3 6 0)))
-  (should (equal (rpgtk--expression-parts "d4+4") '(1 4 4)))
-  (should (equal (rpgtk--expression-parts "2d4-3") '(2 4 -3)))
-  (should (equal (rpgtk--expression-parts "dc") nil)))
+  ;; Test the filter function for arbitrary rolls:
+  (let* ((rolls (rpgtk-dice-roll-mod '(1 4 2 3)
+                                     :filter 'evenp
+                                     :min)))
+    (should (equal '(2)  (nth 2 rolls))))
 
-(ert-deftest rpgtk--roll-dice-expression-test ()
-  (let ((results (rpgtk-roll-dice-expression "2d6+1")))
-    (should (= 2 (length (car results))))
-    (should (= 1 (cdr results))))
+  ;; Test the map function for arbitrary transformations
+  (let* ((rolls (rpgtk-dice-roll-mod '(1 4 2 3)
+                                     :map '1+)))
+    (should (equal '(2 5 3 4)  (nth 1 rolls)))))
 
-  (let ((test-cases '(("d6" 1 6)
+(ert-deftest rpgtk-dice-roll-dnd-test ()
+  (let ((ds (rpgtk-dice-roll-dnd 3 8 2)))
+    ;; A D&D dice roll will have four transformations:
+    (should (= (seq-length ds) 4))
+    ;; The third modification adds a 2 to the result:
+    (should (= (nth 1 (nth 2 ds)) 2))))
+
+;; ----------------------------------------------------------------------
+
+(ert-deftest rpgtk-dice-roll-regexp-test ()
+  (should (string-match rpgtk-dice-roll-regexp "d20"))
+  (should (string-match rpgtk-dice-roll-regexp "4d20"))
+  (should (string-match rpgtk-dice-roll-regexp "4d20+4"))
+  (should (string-match rpgtk-dice-roll-regexp "4d20-4"))
+  (should (not (string-match rpgtk-dice-roll-regexp "4+4")))
+  (should (not (string-match rpgtk-dice-roll-regexp "foobar"))))
+
+(ert-deftest rpgtk-dice--expression-parts-test ()
+  (let ((results (rpgtk-dice--expression-parts "2d6+1")))
+    (should (= 2 (nth 0 results)))
+    (should (= 6 (nth 1 results)))
+    (should (= 1 (nth 2 results)))))
+
+(ert-deftest rpgtk-dice-roll-expression-test ()
+  (let ((tester-func (lambda (expr) (rpgtk-dice-last
+                                (rpgtk-dice-roll-expression expr))))
+        (test-cases '(("d6" 1 6)
                       ("2d12" 2 24)
                       ("3d6+2" 5 20))))
     (dolist (test-data test-cases)
-      (destructuring-bind (dice-expression lowest highest) test-data
-        (rpgtk--test-roll-series 'rpgtk-roll-dice-expression
-                                 (list dice-expression) lowest highest)))))
+      (seq-let (dice-expression lowest highest) test-data
+        (rpgtk-dice--test-rolls tester-func
+                    (list dice-expression) lowest highest)))))
 
-(ert-deftest rpgtk--roll-expression-test ()
+(ert-deftest rpgtk-dice-roll-die-test ()
   "Simple test of my random number generator.
-This really tests the `rpgtk--test-rolls' function."
-  (dolist (test-data '((4 1 4)
-                       (6 1 6)
-                       (8 1 8)
-                       (20 1 20)
-                       (100 1 100)))
-    (destructuring-bind (die lowest highest) test-data
-      (rpgtk--test-rolls #'rpgtk--roll-die (list die) lowest highest))))
+This really tests the `rpgtk-dice--test-rolls' function."
+  (should (rpgtk-dice--test-rolls 'rpgtk-dice-roll-die '(4) 1 4))
+  (should (rpgtk-dice--test-rolls 'rpgtk-dice-roll-die '(6) 1 6))
+  (should (rpgtk-dice--test-rolls 'rpgtk-dice-roll-die '(8) 1 8))
+  (should (rpgtk-dice--test-rolls 'rpgtk-dice-roll-die '(12) 1 12))
+  (should (rpgtk-dice--test-rolls 'rpgtk-dice-roll-die '(20) 1 20))
+  (should (rpgtk-dice--test-rolls 'rpgtk-dice-roll-die '(100) 1 100)))
 
-(ert-deftest rpgtk--display-roll-test ()
-  (should (equal (rpgtk--display-roll '((1 2 3) . 0)) "6 ... (1 2 3)"))
-  (should (equal (rpgtk--display-roll '((1 2 3) . 4)) "10 ... (1 2 3) +4"))
-  (should (equal (rpgtk--display-roll '((1 2 3) . -4)) "2 ... (1 2 3) -4"))
-  (should (equal (rpgtk--display-roll '((2) . 4)) "6 ... 2 +4"))
-  (should (equal (rpgtk--display-roll '((2) . 0)) "2"))
-  (should (equal (rpgtk--display-roll '((1 2 3) . 4) "3d6+4") "10 ... (1 2 3) +4 | 3d6+4")))
+(ert-deftest rpgtk-dice-display-roll-test ()
+  (should (equal (rpgtk-dice-format-roll
+                  '((1 2 3) (6)))
+                 "6 … 「1 2 3」→「6」"))
+  (should (equal (rpgtk-dice-format-roll
+                  '((1 2 3) (4)) "3d6" 6 4)
+                 "4 … 「1 2 3」→「4」 | 3d6")))
 
-(ert-deftest rpgtk-roll-em-test ()
-  (let ((expr-results (rpgtk-roll-em "3d6+2")))
-    (should (= (seq-length expr-results) 3))
-    (should (= (seq-length (nth 1 expr-results)) 3))
-    (should (> (nth 0 expr-results) 3))
-    (should (= (nth 2 expr-results) 2)))
-  (let ((item-results (rpgtk-roll-em 3 6 2)))
-    (should (= (seq-length item-results) 3))
-    (should (= (seq-length (nth 1 item-results)) 3))
-    (should (> (nth 0 item-results) 3))
-    (should (= (nth 2 item-results) 2))))
-
-(ert-deftest rpgtk-roll-sum-test ()
-  (let ((expr-results (rpgtk-roll-sum "3d6+2")))
-    (should (>= expr-results 5))
-    (should (<= expr-results 20)))
-  (let ((expr-results (rpgtk-roll-sum 3 6 2)))
+(ert-deftest rpgtk-dice-roll-expression-sum-test ()
+  (let ((expr-results (rpgtk-dice-roll-expression-sum "3d6+2")))
     (should (>= expr-results 5))
     (should (<= expr-results 20))))
 
@@ -194,6 +180,33 @@ This really tests the `rpgtk--test-rolls' function."
              (equal results "There are 3 dragons")
              (equal results "There are 4 dragons")
              (equal results "There are 5 dragons")))))
+
+(ert-deftest rpgtk-dice-format-dice-roll-test ()
+  (should (equal "「1 2 3 4」"
+                 (rpgtk-dice-format-dice-roll '(1 2 3 4))))
+ (should (equal "「1」"
+                 (rpgtk-dice-format-dice-roll '(1))))
+  (should (equal " "
+                 (rpgtk-dice-format-dice-roll nil))))
+
+(ert-deftest rpgtk-dice-format-dice-rolls-test ()
+  (should (equal "「1 2 3 4」→「5」"
+                 (rpgtk-dice-format-dice-rolls '((1 2 3 4) (5)))))
+ (should (equal "「1」"
+                (rpgtk-dice-format-dice-rolls '((1)))))
+  (should (equal ""
+                 (rpgtk-dice-format-dice-rolls nil))))
+
+(ert-deftest rpgtk-dice-last-test ()
+  (should (= (rpgtk-dice-last '((1 2 3 4) (5)))
+             5)))
+
+(ert-deftest rpgtk-dice-format-total-test ()
+  (should (eq (rpgtk-dice-format-total 24 '(20) 15 nil 20)
+             'rpgtk-critical-success-roll))
+  (should (eq (rpgtk-dice-format-total 12 '(8 4))
+             'rpgtk-other-roll)))
+
 
 ;; ----------------------------------------------------------------------
 ;; INTERACTIVE TESTS
@@ -217,27 +230,32 @@ This really tests the `rpgtk--test-rolls' function."
 ;;         (modifier (cdr roll-combo)))
 ;;     (rpgtk--display-roll-parts answer die-rolls modifier expression)))
 
-(defun rpgtk--roll-display (which-one)
+(defun rpgtk-dice--roll-display (which-one)
   "Display WHICH-ONE type of dice roll."
-  (interactive (list (completing-read-value "Which dice roll: "
-                                            '(("Critical" critical)
-                                              ("Success" success)
-                                              ("Failure" failure)
-                                              ("Fumble" fumble)
-                                              ("Partial success" middlin)
-                                              ("None of the above" nil)))))
-  (cl-case which-one
-    ((critical) (message (rpgtk--display-roll-parts 24 '(20) 4 "d20+4"
-                                                    15 nil 20 1)))
-    ((success) (message (rpgtk--display-roll-parts 18 '(15) 3 "d20+3"
-                                                   15  nil 20 1)))
-    ((middlin) (message (rpgtk--display-roll-parts 5 '(2 5 4) 0 "BitD: 3"
-                                                   6 4 6)))
-    ((failure) (message (rpgtk--display-roll-parts 6 '(3) 3 "d20+3"
-                                                   15 nil 20 1)))
-    ((fumble) (message (rpgtk--display-roll-parts 6 '(1) 5 "d20+5"
-                                                  15 nil 20 1)))
-    (t (message (rpgtk--display-roll-parts 18 '(6 8 4) 0 "3d8")))))
+  (interactive (list (completing-read "Which dice roll: "
+                                      '("Critical"
+                                        "Success"
+                                        "Failure"
+                                        "Fumble"
+                                        "Partial success"
+                                        "None of the above"))))
+  (cond
+    ((equal which-one "Critical")
+     (message (rpgtk-dice-format-roll '((20) (20 4) (24)) "d20+4"
+                                      15 nil 20 1)))
+    ((equal which-one "Success")
+     (message (rpgtk-dice-format-roll '((15) (15 3) (18)) "d20+3"
+                                         15  nil 20 1)))
+    ((equal which-one "Partial success")
+     (message (rpgtk-dice-format-roll '((2 5 4) (5)) "BitD: 3"
+                                      6 4 6)))
+    ((equal which-one "Failure")
+     (message (rpgtk-dice-format-roll '((4) (4 3) (7)) "d20+3"
+                                      15 nil 20 1)))
+    ((equal which-one "Fumble")
+     (message (rpgtk-dice-format-roll '((1) (1 5) (6)) "d20+5"
+                                      5 nil 20 1)))
+    (t (message (rpgtk-dice-format-roll '((6 8 4) (18)) "3d8")))))
 
 (provide 'rpgtk-dice-tests)
 ;;; rpgtk-dice-tests.el ends here

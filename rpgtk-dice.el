@@ -31,9 +31,9 @@
 ;;
 ;;; Code:
 
-(defvar rpgtk-previous-roll-expression nil
-  "Whenever we roll a dice from an expression, we remember it
-here, so that we can re-roll it again.")
+(defvar rpgtk-dice-previous-roll-expression nil
+  "Store last dice expression, aa a string.
+This way, we can re-roll it again.")
 
 (defface rpgtk-critical-success-roll
   '((t :foreground "green yellow"
@@ -76,6 +76,21 @@ here, so that we can re-roll it again.")
   "Face for dice expression (if given)."
   :group 'rpgtk)
 
+(defface rpgtk-display-dice-sequence
+  '((t :foreground "dark gray"))
+  "Face for unimportant parts of a displayed message."
+  :group 'rpgtk)
+
+(defface rpgtk-display-dice-sequence-separator
+  '((t :foreground "dim gray"))
+  "Face for unimportant parts of a displayed message."
+  :group 'rpgtk)
+
+(defface rpgtk-display-dice-sequence-border
+  '((t :foreground "gray"))
+  "Face for unimportant parts of a displayed message."
+  :group 'rpgtk)
+
 (defface rpgtk-dimmed-display
   '((t :foreground "gray"))
   "Face for unimportant parts of a displayed message."
@@ -87,12 +102,16 @@ here, so that we can re-roll it again.")
   "Face for important parts of a message."
   :group 'rpgtk)
 
+;; -------------------------------------------------------------------
+;;  DICE ROLLING BASICS
+;; -------------------------------------------------------------------
+
 ;; The basics of a dice roll is a random number from a given range.
 ;; Note that if we give a 6-sided die to the random number, we will
 ;; end up with a range of 0 to 5, so we need to increase this value by
 ;; 1.
 
-(defun rpgtk-roll-die (sides)
+(defun rpgtk-dice-roll-die (sides)
   "Rolls a die of with SIDES."
   (interactive "nDice Type (sides): ")
   (1+ (random sides)))
@@ -102,109 +121,121 @@ here, so that we can re-roll it again.")
 ;; be a list, so that we can easily sum them, but still have the
 ;; original results of each die roll.
 
-(defun rpgtk-roll-dice (count sides)
+(defun rpgtk-dice-roll (count sides)
   "Return a list of COUNT dice rolls where each die has SIDES."
   (interactive "nNumber of Dice to Roll: \nnDice Type (sides): ")
   (let (value)
     (dotimes (_ count value)
-      (setq value (cons (rpgtk-roll-die sides) value)))))
+      (setq value (cons (rpgtk-dice-roll-die sides) value)))))
 
-;; An RPG has checks that have multiple dice, plus a modifier
-;; (positive or negative). When displaying the results, I want all the
-;; dice rolls displayed differently from the modifier. Should we just
-;; assume the modifier is the first or last number is the returned
-;; list?
+;; -------------------------------------------------------------------
+;; DICE MODIFICATIONS FUNCTIONS
 ;;
-;; What if we have this function return a cons'd with the `car' be a
-;; list of the rolls, and the `cdr' the modifier amount?
+;; With a pool of dice, we want to have functions that emulate various
+;; RPG games, for instance D&D takes a dice pool and then adds one or
+;; more modifiers, where Blades in the Dark, rolls a pool of d6's and
+;; takes the highest value.
+;;
+;; To make this easy, we create a mini-DSL
+;; -------------------------------------------------------------------
 
-(defun rpgtk--roll (num-dice dice-type &optional modifier plus-minus)
-  "Generate a random dice roll.
-Return tuple where `car' is a list of rolled
-results, and the `cdr' is the modifier, see `rpgtk--sum'.
+(defun rpgtk-dice--split-roll-mods (modifiers)
+  "Return three-element list of MODIFIERS.
+For instance, if MODIFIERS is the list consisting of:
+   (:foo 3 4 :bar 7 :baz)
 
-The NUM-DICE is the number of DICE-TYPE to roll. The PLUS-MINUS
-is a string of either '+' or '-' to affect the results with the
-MODIFIER amount. If PLUS-MINUS is nil, assume MODIFIER should
-be added."
-  (let* ((base-rolls (rpgtk-roll-dice num-dice dice-type)))
-    (cond ((string= "-" plus-minus) (cons base-rolls (- modifier)))
-          ((numberp modifier)       (cons base-rolls modifier))
-          (t                        (cons base-rolls 0)))))
+Would return:  (:foo (3 4) (:bar 7 :baz)
 
-(defun rpgtk--roll-with-choice (num-dice dice-type choose-fn
-                                         &optional modifier plus-minus)
-  "Return dice roll where results are filtered by CHOOSE-FN.
-Like `rpgtk--roll', NUM-DICE are the number of dice to roll of
-sides of DICE-TYPE, e.g. 6 for normal cubed dice.
+Where the first element is a keyword, the second element is a
+list of all non-keyword elements, and the third is a list of the
+rest, starting with a keyword."
+  (let* ((nonkey (lambda (k) (not (keywordp k)))))
+    (list
+     (car modifiers)
+     (seq-take-while nonkey (cdr modifiers))
+     (seq-drop-while nonkey (cdr modifiers)))))
 
-The PLUS-MINUS is a string of either '+' or '-' to affect the
-results with the MODIFIER amount. If PLUS-MINUS is nil, assume
-MODIFIER should be added.
+(defun rpgtk-dice--roll-mod (dice-pool modifiers)
+  "Return a list of DICE-POOL and a list dice sequences.
+Each new dice sequence is modified based on MODIFIERS.
+See `rpgtk-dice-roll-mod' for DSL details implemented here."
+  (seq-let (modifier parameters rest)
+      (rpgtk-dice--split-roll-mods modifiers)
+    (cons dice-pool
+          (when modifier
+            (let ((modded-dice-pool
+                   (cl-case modifier
+                     (:add    (append dice-pool parameters))
+                     (:sum    (list (apply '+ dice-pool)))
+                     (:max    (list (apply 'max dice-pool)))
+                     (:min    (list (apply 'min dice-pool)))
+                     (:top    (seq-take (seq-sort '> dice-pool)
+                                        (or (car parameters) 1)))
+                     (:bottom (seq-take (seq-sort '< dice-pool)
+                                        (or (car parameters) 1)))
+                     (:filter (seq-filter (car parameters) dice-pool))
+                     (:map    (seq-map (car parameters) dice-pool))
+                     (t (error (format "%s not keyword" modifier))))))
+              (rpgtk-dice--roll-mod modded-dice-pool rest))))))
 
-For instance, to keep the highest of 3 of rolling 4 six-sided
-the CHOOSE-FN can be a lambda like:
+(defun rpgtk-dice-roll-mod (dice-pool &rest modifiers)
+  "Return a sequence of modifications of DICE-POOL.
+Use this to simulate special RPG-specific dice-roll
+interpretations.
 
-    (lambda (rolls)
-      (seq-take (seq-sort #'> rolls) 3))
+Where DICE-POOL is a list of numbers generated by rolling a
+number of dice, and MODIFIERS is a sequence of modifications
+to perform on DICE-POOL.
 
-Return tuple where `car' is a list of rolled results, and the
-`cdr' is the modifier."
-  (let* ((rolls (rpgtk--roll num-dice dice-type modifier plus-minus)))
-    (cons
-     (funcall choose-fn (car rolls))
-     (cdr rolls))))
+For instance, to simulate a D&D style, like 2d8+4, we would:
 
+    (rpgtk-dice-roll-mod (rpgtk-dice-roll 2 8)
+                         :add 4
+                         :sum)
 
-(defun rpgtk-roll-highest (num-dice dice-type
-                                    &optional num-keep modifier plus-minus)
-  "Return dice roll where on NUM-KEEP highest rolls are returned.
-Like `rpgtk--roll', NUM-DICE are the number of dice to roll of sides
-of DICE-TYPE, e.g. 6 for normal cubed dice.
+Could return: ((1 7) (1 7 4) (12))
 
-The PLUS-MINUS is a string of either '+' or '-' to affect the
-results with the MODIFIER amount. If PLUS-MINUS is nil, assume
-MODIFIER should be added.
+A Blades in the Dark game rolls a pool of d6, and takes the highest:
 
-Return tuple where `car' is a list of rolled results, and the
-`cdr' is the modifier."
-  (let* ((highest (lambda (rolls)
-                    (seq-take (seq-sort #'> rolls) num-keep))))
-    (rpgtk--roll-with-choice 4 6 highest)))
+    (rpgtk-dice-roll-mod (rpgtk-dice-roll num-dice 6)
+                         :max)
 
-(defun rpgtk-roll-lowest (num-dice dice-type
-                                   &optional num-keep modifier plus-minus)
-  "Return dice roll where on NUM-KEEP lowest rolls are returned.
-Like `rpgtk--roll', NUM-DICE are the number of dice to roll of sides
-of DICE-TYPE, e.g. 6 for normal cubed dice.
+Which could return, if num-dice is 4:  ((1 3 5 2) (5))
 
-The PLUS-MINUS is a string of either '+' or '-' to affect the
-results with the MODIFIER amount. If PLUS-MINUS is nil, assume
-MODIFIER should be added.
+Modifiers include:
 
-Return tuple where `car' is a list of rolled results, and the
-`cdr' is the modifier."
-  (let* ((lowest (lambda (rolls)
-                   (seq-take (seq-sort #'< rolls) num-keep))))
-    (rpgtk--roll-with-choice 4 6 lowest)))
+    * :add    appends one or more numbers to the dice pool
+    * :sum    adds all numbers in dice pool
+    * :max    returns the highest number is pool
+    * :min    returns the lowest number
+    * :top    returns the highest number(s) based on parameter
+              given, and if no number given, defaults to 1
+    * :top    returns the lowest number(s) based on parameter
+              given, and if no number given, defaults to 1
+    * :filter only keeps numbers that pass a predicate lambda
+    * :map    changes dice pool based on a given lamda expression"
+  (rpgtk-dice--roll-mod dice-pool modifiers))
 
-
-(defun rpgtk--sum (roll-combo)
-  "Return a summation of the dice rolls in ROLL-COMBO tuple.
-The tuple is a `cons' structure where the `car' is a list of rolls,
-and the `cdr' is a modifier, e.g. ((5 3 2 1 6) . 3)."
-  (let ((rolls    (car roll-combo))
-        (modifier (cdr roll-combo)))
-    (seq-reduce #'+ rolls modifier)))
+(defun rpgtk-dice-last (dice-sequence)
+  "Return the last digit of DICE-SEQUENCE.
+Where DICE-SEQUENCE is a list of numeric lists, e.g.
+`((1 8 3 4) (8 4) (12))' would return 12."
+  (thread-first dice-sequence
+                flatten-list
+                last
+                car))
 
 ;; ------------------------------------------------------------
 ;; DICE EXPRESSION- Strings like 2d6+1 could be split into integer
 ;; values, and passed to functions defined above, as the first digit
 ;; is the number of dice to roll, and the digit following the "d" is
 ;; the number of sides.
+;;
+;; Yeah, this is primary a style we associate with D&D, but is quite
+;; common in many RPGs.
 ;; ------------------------------------------------------------
 
-(defvar rpgtk-roll-regexp
+(defvar rpgtk-dice-roll-regexp
   (rx word-start
       (optional (group (one-or-more digit)))
       "d"
@@ -217,7 +248,7 @@ and the `cdr' is a modifier, e.g. ((5 3 2 1 6) . 3)."
       word-end)
   "A regular expression that matches a dice roll.")
 
-(defun rpgtk-forward-roll (count)
+(defun rpgtk-dice-forward-roll (count)
   "Move the point to the next COUNT of a dice roll expression.
 
 Note: This moves the point to the _beginning_ of what is
@@ -229,17 +260,17 @@ the following:
   - 1d12+5
   - d20-4"
   (interactive "p")
-  (when (looking-at-p rpgtk-roll-regexp)
-    (re-search-forward rpgtk-roll-regexp))
+  (when (looking-at-p rpgtk-dice-roll-regexp)
+    (re-search-forward rpgtk-dice-roll-regexp))
   (dotimes (repeat count)
-    (re-search-forward rpgtk-roll-regexp))
+    (re-search-forward rpgtk-dice-roll-regexp))
   (goto-char (match-beginning 0)))
 
-(defun rpgtk--expression-parts (expression)
+(defun rpgtk-dice--expression-parts (expression)
   "Given a dice EXPRESSION, e.g. 2d6+3, return a list of the numbers.
 For instance, 3d6+2 would return (3 6 2) and 2d10-1 would return
 the list (2 10 -1)."
-  (when (string-match rpgtk-roll-regexp expression)
+  (when (string-match rpgtk-dice-roll-regexp expression)
     (let* ((num-dice-s  (or (match-string 1 expression) "1"))
            (num-dice    (string-to-number num-dice-s))
            (dice-type-s (or (match-string 2 expression) "20"))
@@ -252,64 +283,95 @@ the list (2 10 -1)."
                 (- 0 modifier)
               modifier)))))
 
-(defun rpgtk-roll-dice-expression (expression)
-  "Return dice roll of EXPRESSION as a string, e.g. 2d6+3."
+(defun rpgtk-dice-roll-expression (dice-expression)
+  "Return dice roll of DICE-EXPRESSION as a string, e.g. 2d6+3."
   (seq-let (num-dice dice-type modifier)
-      (rpgtk--expression-parts expression)
-    (rpgtk--roll num-dice dice-type modifier)))
+           (rpgtk-dice--expression-parts dice-expression)
+    (if (= modifier 0)
+        (rpgtk-dice-roll-mod (rpgtk-dice-roll num-dice dice-type)
+                             :sum)
+      (rpgtk-dice-roll-mod (rpgtk-dice-roll num-dice dice-type)
+                           :sum
+                           :add modifier
+                           :sum))))
 
-;; For programmatic reasons, we need a quick way to roll dice and get a
-;; numeric value.
-
-(defun rpgtk-roll-em (num-or-expr &optional dice-type modifier plus-minus)
-  "Return results of rolling some dice values as a list.
-
-The first element is the sum total of rolling the dice. The
-second is a list of the dice rolls, and the third is an integer
-value of the modifier included in the total.
-
-NUM-OR-EXPR can either be a dice expression as a string, e.g.
-2d4+2 Or NUM-OR-EXPR is the number of dice to roll of type,
-DICE-TYPE, and a MODIFIER is included in the sum. PLUS-MINUS can
-be a string '+' or '-'.
-
- - A roll-combo tuple list
- - A single number of dice to roll (but this requires more values)
-a cons-cell, where car is a sum total of a dice roll."
-  (let* ((rolls (if (stringp num-or-expr)
-                    (rpgtk-roll-dice-expression num-or-expr)
-                  (rpgtk--roll num-or-expr dice-type modifier plus-minus)))
-         (total (rpgtk--sum rolls)))
-    (list total (car rolls) (cdr rolls))))
-
-
-
-(defun rpgtk-roll-sum (num-or-expr &optional dice-type modifier)
-  "Return only sum value from rolling some dice.
-The NUM-OR-EXPR can be one of the following values:
- - A dice expression as a string, e.g. 2d4+2
- - A single number of dice to roll (but this requires more values)
-
-If NUM-OR-EXPR is an integer, then DICE-TYPE is the number of dice sides.
-MODIFIER, if given, is added to roll."
-  (car (rpgtk-roll-em num-or-expr dice-type modifier)))
+(defun rpgtk-dice-roll-expression-sum (dice-expression)
+  "Return sum value from rolling some dice, via DICE-EXPRESSION.
+For instance, if given a string, e.g. 2d4+2, ruturn a single
+integer value from rolling 2 four-sided die and adding 2."
+  (rpgtk-dice-last
+   (rpgtk-dice-roll-expression dice-expression)))
 
 (defun rpgtk-dice-format-string (str)
   "Replace all dice expressions in STR with a dice roll results."
-  (replace-regexp-in-string rpgtk-roll-regexp
+  (replace-regexp-in-string rpgtk-dice-roll-regexp
                             (lambda (s) (number-to-string
-                                    (rpgtk-roll-sum s)))
+                                    (rpgtk-dice-roll-expression-sum s)))
                             str))
 
-(defun rpgtk--display-roll-parts (answer die-rolls modifier
-                                         &optional expression
-                                         success middlin
-                                         critical fumble)
+;; ----------------------------------------------------------------------
+;;  DICE DISPLAY
+;;
+;;  These functions colorize the display of dice rolls and expressions.
+;;  The main function is `rpgtk-dice-format-roll'.
+;; ----------------------------------------------------------------------
+
+(defun rpgtk-dice-format-dice-roll (roll)
+  "Convert ROLL from a list of dice rolled integers to a string."
+  (if roll
+      (let ((roll-of-strs (seq-map 'number-to-string roll)))
+        (concat (propertize "「" 'face 'rpgtk-display-dice-sequence-border)
+                (propertize (string-join roll-of-strs " ")
+                            'face 'rpgtk-display-dice-sequence)
+                (propertize "」" 'face 'rpgtk-display-dice-sequence-border)))
+    " "))
+
+(defun rpgtk-dice-format-dice-rolls (rolls)
+  "Convert ROLLS from a list of lists of integers to a string.
+Given:   ((3 4 1 2) (4 2) (6) (-3))
+Return: 「3 4 1 2」→「4 2」→「6」→「-3」
+
+Perhaps this could be called with `propertize'."
+  (let ((s-rolls (seq-map 'rpgtk-dice-format-dice-roll rolls)))
+    (string-join s-rolls
+                 (propertize "→" 'face
+                             'rpgtk-display-dice-sequence-separator))))
+
+(defun rpgtk-dice-format-total (total dice-rolls
+                                      &optional success middlin
+                                      critical fumble)
+  "Return a property symbols based on dice roll logic.
+See `rpgtk-dice-format-roll' for details.
+TOTAL is a number, and DICE-ROLLS is a list of numbers."
+  (cond
+   ((and critical (seq-contains-p dice-rolls critical))
+    'rpgtk-critical-success-roll)
+   ((and fumble (seq-contains-p dice-rolls fumble))
+    'rpgtk-critical-failure-roll)
+   ((and success (>= total success))
+    'rpgtk-successful-roll)
+   ((and middlin (>= total middlin))
+    'rpgtk-middlin-roll)
+   (success 'rpgtk-failed-roll)
+   (t 'rpgtk-other-roll)))
+
+(defun rpgtk-dice-format-roll-uniq (dice-rolls)
+  "Return DICE-ROLLS without repeating sequences."
+  ;; shame I can't use `seq-uniq', but we should only remove
+  ;; duplicates that are next to each other.
+  (let (acc)
+    (dolist (roll dice-rolls acc)
+      (unless (equal (car (last acc)) roll)
+        (setq acc (append acc (list roll)))))))
+
+(defun rpgtk-dice-format-roll (dice-rolls
+                               &optional expression
+                               success middlin
+                               critical fumble)
   "Render parameters into a suitable string.
-The ANSWER is probably the sum expression of DIE-ROLLS (a list of
-integers), rendered brightly. MODIFIER is positive or negative
-number. The EXPRESSION is a string that may have generated the
-roll combo.
+The total is probably the last element of DICE-ROLLS (a list
+of list of integers ... of rolled dice), rendered brightly. The
+EXPRESSION is a string that may have generated the roll combo.
 
 If SUCCESS is given, ANSWER is displayed with the face,
 `rgptk-successful-roll' if ANSWER is greater than or equal to
@@ -326,56 +388,83 @@ If FUMBLE is given, ANSWER is displayed with the face,
 `rgptk-critical-failure-roll' if any DIE-ROLLS match this value.
 
 Otherwise, ANSWER is displayed with the face, `rgptk-other-roll'."
-  (let* ((sum-prop (cond
-                    ((and critical (seq-contains-p die-rolls critical))
-                     'rpgtk-critical-success-roll)
-                    ((and fumble (seq-contains-p die-rolls fumble))
-                     'rpgtk-critical-failure-roll)
-                    ((and success (>= answer success))
-                     'rpgtk-successful-roll)
-                    ((and middlin (>= answer middlin))
-                     'rpgtk-middlin-roll)
-                    (success 'rpgtk-failed-roll)
-                    (t 'rpgtk-other-roll)))
-         (sum-str (propertize (number-to-string answer)
-                              'face sum-prop))
-         (die-str (cond ((and (= (length die-rolls) 1)
-                              (= modifier 0))
-                         "")
-                        ((= (length die-rolls) 1)
-                         (format " ... %d" (car die-rolls)))
-                        (t
-                         (format " ... %s" die-rolls))))
-         (mod-str (cond ((> modifier 0)  (format " +%d" modifier))
-                        ((< modifier 0)  (format " %d" modifier))
-                        (t               "")))
+  (let* ((total (rpgtk-dice-last dice-rolls))
+         (total-prop (rpgtk-dice-format-total total (car dice-rolls)
+                                              success middlin
+                                              critical fumble))
+         (total-str (propertize (number-to-string total)
+                                'face total-prop))
+         (total-sep (propertize " … " 'face 'rpgtk-dimmed-display))
+         (rolls-str (thread-last dice-rolls
+                                 rpgtk-dice-format-roll-uniq
+                                 rpgtk-dice-format-dice-rolls))
          (exp-str (if expression
                       (format " | %s"
                               (propertize expression
                                           'face 'rpgtk-roll-expression))
                     "")))
-    (format "%s%s%s%s" sum-str die-str mod-str exp-str)))
+    (format "%s%s%s%s" total-str total-sep rolls-str exp-str)))
 
 (defun rpgtk-roll (expression)
   "Generate a random number based on a given dice roll EXPRESSION.
 Unless the point is on a dice roll description, e.g 2d12+3."
-  (interactive (list (if (looking-at rpgtk-roll-regexp)
+  (interactive (list (if (looking-at rpgtk-dice-roll-regexp)
                          (match-string-no-properties 0)
                        (read-string "Dice Expression: "))))
-  (setq rpgtk-previous-roll-expression expression)
-  (seq-let (answer die-rolls modifier) (rpgtk-roll-em expression)
+  (setq rpgtk-dice-previous-roll-expression expression)
+  (let* ((rolls (rpgtk-dice-roll-expression expression)))
     (message "Rolled: %s"
-             (rpgtk--display-roll-parts answer die-rolls
-                                        modifier expression))))
+             (rpgtk-dice-format-roll rolls expression))))
 
 (defun rpgtk-roll-again ()
   "Roll the previous expression ... again.
 Never rolled before? No problem, we'll query for the expression
 if we need too."
   (interactive)
-  (if rpgtk-previous-roll-expression
-      (rpgtk-roll rpgtk-previous-roll-expression)
+  (if rpgtk-dice-previous-roll-expression
+      (rpgtk-roll rpgtk-dice-previous-roll-expression)
     (call-interactively 'rpgtk-roll)))
+
+
+;; ------------------------------------------------------------------
+;;  SOME GAME-SPECIFIC DICE ROUTINES
+;; -------------------------------------------------------------------
+
+(defun rpgtk-dice-roll-dnd (num-dice dice-type modifier)
+  "Return a dice sequence that simulates a D&D-style roll.
+Given a dice expression of 3d8+2, this function would be called
+where NUM-DICE is the number of dice, e.g. 3, and
+DICE-TYPE is the size of number of sides of dice, e.g. 8,
+and MODIFIER is the value to add/subtract to the sum, e.g. 2."
+  (rpgtk-dice-roll-mod (rpgtk-dice-roll num-dice dice-type)
+                       :sum
+                       :add modifier
+                       :sum))
+
+(defun rpgtk-dice-roll-dnd-advantage (&optional modifier)
+  "Return a dice sequence of two d20s, and the highest is kept.
+Note that MODIFIER is added to the results."
+  (rpgtk-dice-roll-mod (rpgtk-dice-roll 2 20)
+                       :max
+                       :add (or modifier 0)
+                       :sum))
+
+(defun rpgtk-dice-roll-dnd-disadvantage (&optional modifier)
+  "Return a dice sequence of two d20s, and the lowest is kept.
+Note that MODIFIER is added to the results."
+  (rpgtk-dice-roll-mod (rpgtk-dice-roll 2 20)
+                       :min
+                       :add (or modifier 0)
+                       :sum))
+
+(defun rpgtk-dice-roll-bitd (num-dice)
+  "Displays a formatted dice expression for Blades in the Dark.
+Where NUM-DICE are the number six-sided dice to roll."
+  (interactive "nNumber of Dice: ")
+  (message  (thread-first num-dice
+                          (rpgtk-dice-roll 6)
+                          (rpgtk-dice-roll-mod :max)
+                          (rpgtk-dice-format-roll nil 6 4))))
 
 (provide 'rpgtk-dice)
 ;;; rpgtk-dice.el ends here
