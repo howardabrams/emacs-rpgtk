@@ -1,4 +1,4 @@
-;;; RPGTK-DICE -- Yet Another Dice Simulator
+;;; rpgtk-dice.el -- Yet another dice simulator -*- lexical-binding: t; -*-
 ;;
 ;; Author: Howard Abrams <howard@howardabrams.com>
 ;; Copyright © 2018, Howard Abrams, all rights reserved.
