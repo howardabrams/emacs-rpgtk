@@ -1,0 +1,26 @@
+The weather choices during the early part of the year.
+
+Notice that we can include commentary at the beginning of the file to
+help explain the table, but in this case, we’ve added /extra
+information/:
+
+ - Snow.  Effects: Cold, Heavy Snow, Windy
+ - Snow.  Effects: Cold, Light Snow
+ - Sleet Storm.  Effects: Heavy Precipitation, Ice, Windy
+ - Overcast
+ - Overcast.  Effects: Light Fog
+ - Overcast.  Effects: Light Fog
+ - Overcast.  Effects: Heavy Fog
+ - Overcast.  Effects: Heavy Fog
+ - Drizzle.  Effects: Light Rain
+ - Drizzle.  Effects: Light Rain
+ - Drizzle.  Effects: Light Rain
+ - Raining.  Effects: Heavy Rain
+ - Raining.  Effects: Heavy Rain
+ - Clear
+ - Clear.  Effects: Windy
+ - Partly Cloudy
+ - Partly Cloudy.  Effects: Windy
+ - Partly Cloudy.  Effects: Light Fog
+ - Sea Gale.  Effects: Strong Wind
+ - Thunderstorm Heavy Rain, Lightning, Strong Wind

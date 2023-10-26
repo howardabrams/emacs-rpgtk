@@ -1,0 +1,80 @@
+#+title:     Player and NPC Backgrounds
+#+author:    Howard X. Abrams
+#+email:     howard.abrams@workday.com
+
+# I suppose I could actually delete many of the rare backgrounds...
+
+ | Nothing Special (re-roll?)     | often    |
+ | Acolyte                        | seldom   |
+ | Charlatan                      | seldom   |
+ | Criminal / Spy                 | seldom   |
+ | Entertainer / Gladiator        | seldom   |
+ | Folk Hero                      | seldom   |
+ | Guild Artisan / Guild Merchant | seldom   |
+ | Hermit                         | seldom   |
+ | Noble / Knight                 | seldom   |
+ | Outlander                      | seldom   |
+ | Sage                           | seldom   |
+ | Sailor / Pirate                | seldom   |
+ | Soldier                        | seldom   |
+ | Urchin                         | seldom   |
+ | City Watch / Investigator      | scarcely |
+ | Clan Crafter                   | scarcely |
+ | Cloistered Scholar             | scarcely |
+ | Courtier                       | scarcely |
+ | Faction Agent                  | scarcely |
+ | Far Traveler                   | scarcely |
+ | Inheritor                      | scarcely |
+ | Knight of the Order            | scarcely |
+ | Mercenary Veteran              | scarcely |
+ | Urban Bounty Hunter            | scarcely |
+ | Uthgardt Tribe Member          | scarcely |
+ | Waterdhavian Noble             | scarcely |
+ | Celebrity Adventurer’s Scion   | rarely   |
+ | Gambler                        | rarely   |
+ | Plaintiff                      | rarely   |
+ | Rival Intern                   | rarely   |
+ | Black Fist Double Agent        | rarely   |
+ | Dragon Casualty                | rarely   |
+ | Haunted One                    | rarely   |
+ | Iron Route Bandit              | rarely   |
+ | Phlan Insurgent                | rarely   |
+ | Stojanow Prisoner              | rarely   |
+ | Ticklebelly Nomad              | rarely   |
+ | Faceless                       | rarely   |
+ | Caravan Specialist             | rarely   |
+ | Earthspur Miner                | rarely   |
+ | Harborfolk                     | rarely   |
+ | Mulmaster Aristocrat           | rarely   |
+ | Phlan Refugee                  | rarely   |
+ | Grinner                        | rarely   |
+ | Volstrucker Agent              | rarely   |
+ | House Agent                    | rarely   |
+ | Azorious Functionary           | rarely   |
+ | Boros Legionnaire              | rarely   |
+ | Dimir Operative                | rarely   |
+ | Golgari Agent                  | rarely   |
+ | Gruun Anarch                   | rarely   |
+ | Izzet Engineer                 | rarely   |
+ | Orzhov Representative          | rarely   |
+ | Rakdos Cultist                 | rarely   |
+ | Selesnya Initiate              | rarely   |
+ | Simic Scientist                | rarely   |
+ | Fisher                         | rarely   |
+ | Marine                         | rarely   |
+ | Shipwright                     | rarely   |
+ | Smuggler                       | rarely   |
+ | Athlete                        | rarely   |
+ | Dissenter                      | rarely   |
+ | Initiate                       | rarely   |
+ | Inquisitor                     | rarely   |
+ | Vizier                         | rarely   |
+ | Cormanthor Refugee             | rarely   |
+ | Gate Urchin                    | rarely   |
+ | Hillsfar Merchant              | rarely   |
+ | Hillsfar Smuggler              | rarely   |
+ | Secret Identity                | rarely   |
+ | Shade Fanatic                  | rarely   |
+ | Trade Sheriff                  | rarely   |
+ | Anthropologist                 | rarely   |
+ | Archaeologist                  | rarely   |

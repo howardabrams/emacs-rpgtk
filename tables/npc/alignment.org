@@ -1,0 +1,10 @@
+
+Roll on Table: 3d6
+
+|      3 | Chaotic evil | chaotic neutral |
+|   4--5 | Lawful evil  |                 |
+|   6--8 | Neutral evil |                 |
+|  9--12 | Neutral      |                 |
+| 13--15 | Neutral good |                 |
+| 16--17 | Lawful good  | lawful neutral  |
+|     18 | Chaotic good | chaotic neutral |

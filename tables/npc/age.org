@@ -1,0 +1,11 @@
+# The idea here is an /age/ that is based on humans, but the end results will
+# give a status of what is most likely for a given NPC for any race.
+
+Roll on Table: d110
+
+|  12 | Very young (child)              |
+|  18 | Coming of age                   |
+|  30 | Young adult                     |
+|  65 | Middle-age                      |
+|  90 | Old                             |
+| 110 | Past normal lifespan (very old) |

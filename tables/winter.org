@@ -1,0 +1,21 @@
+
+ - Arctic Gale ... Effects: Extreme Cold, Heavy Snow, Strong Wind
+ - Blizzard ... Effects: Extreme Cold, Heavy Snow, Windy
+ - Snow ... Effects: Cold, Heavy Snow
+ - Snow ... Effects: Cold, Light Snow
+ - Snow ... Effects: Cold, Light Snow
+ - Cold Snap ... Effects: Cold, Windy
+ - Cold Snap ... Effects: Cold
+ - Sleet Storm ... Effects: Ice, Windy
+ - Clear
+ - Clear
+ - Partly Cloudy
+ - Partly Cloudy
+ - Partly Cloudy ... Effects: Light Fog
+ - Overcast
+ - Overcast ... Effects: Light Fog
+ - Overcast ... Effects: Heavy Fog
+ - Drizzle ... Effects: Light Rain
+ - Drizzle ... Effects: Light Rain
+ - Raining ... Effects: Heavy Rain
+ - Thundersnow ... Effects: Cold, Heavy Snow, Lightning, Strong Wind

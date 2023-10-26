@@ -1,0 +1,21 @@
+
+ - Raining.  Effects: Heavy Rain, Windy
+ - Raining.  Effects: Heavy Rain
+ - Drizzle.  Effects: Light Rain
+ - Drizzle.  Effects: Light Rain
+ - Overcast.  Effects: Windy
+ - Overcast.  Effects: Light Fog
+ - Overcast.  Effects: Heavy Fog
+ - Raining.  Effects: Heavy Rain
+ - Raining.  Effects: Heavy Rain, Windy
+ - Raining.  Effects: Heavy Rain, Strong Wind
+ - Partly Cloudy
+ - Partly Cloudy.  Effects: Windy
+ - Partly Cloudy.  Effects: Light Fog
+ - Clear
+ - Clear
+ - Clear.  Effects: Windy
+ - Hailstorm.  Effects: Hail, Ice
+ - Heat Wave.  Effects: Hot
+ - Sea Gale.  Effects: Strong Wind
+ - Thunderstorm.  Effects: Heavy Rain, Lightning, Strong Wind

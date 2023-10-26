@@ -1,0 +1,14 @@
+Roll on Table: 1d100
+
+|       1 | None                                                                                 |            |
+|       2 | Institution, such as an asylum                                                       |            |
+|       3 | Temple                                                                               |            |
+|    4--5 | Orphanage                                                                            |            |
+|    6--7 | Guardian                                                                             |            |
+|   8--15 | [Paternal/Maternal] aunt, uncle, or both; or extended family such as a tribe or clan |            |
+|  16--25 | [Paternal/Maternal] grandparent(s)                                                   |            |
+|  26--35 | Adoptive family ([same/different] race)                                              |            |
+|  36--55 | Single father                                                                        | Stepfather |
+|  56--75 | Single mother                                                                        | Stepmother |
+|  76--88 | [Stepmother/Mother] and father                                                       |            |
+| 89--100 | Mother and [stepfather/father]                                                       |            |

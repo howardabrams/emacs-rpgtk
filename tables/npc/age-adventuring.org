@@ -1,0 +1,9 @@
+
+Roll on Table: d100
+
+|    1 | Very young (child)              |
+| 2-10 | Coming of age                   |
+|   60 | Young adult                     |
+|   90 | Middle-age                      |
+|   99 | Old                             |
+|  100 | Past normal lifespan (very old) |

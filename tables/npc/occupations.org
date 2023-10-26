@@ -1,0 +1,115 @@
+#+TITLE:  NPC Occupations
+#+AUTHOR: Howard X. Abrams
+#+EMAIL:  howard.abrams@workday.com
+#+DATE:   2021-02-02 February
+#+TAGS:   rpg
+
+#   Let's make some assumptions about occupational frequency in a Fantasy City.
+#    - Often: Maid, dock worker, beggar and other general jobs
+#      Seldom: More specific jobs, like baker
+#      Scarce: Limited, specific jobs, like mayor
+#      Rare: Adventures and travelers
+
+  | Tinkerer                     | seldom |
+  | Owlbear Breeder              | scarce |
+  | Shaman                       | scarce |
+  | Bottle Maker                 | seldom |
+  | Stable hand                  | often  |
+  | Innkeeper                    | seldom |
+  | Blacksmith                   | seldom |
+  | Washerwoman                  | often  |
+  | Town cryer                   | seldom |
+  | Tailor                       | seldom |
+  | Portrait painter             | seldom |
+  | Cobbler                      | seldom |
+  | Lamplighter                  | seldom |
+  | Trapper                      | seldom |
+  | Fletcher                     | seldom |
+  | Tanner                       | seldom |
+  | Herbalist                    | seldom |
+  | Farmer                       | seldom |
+  | Carpenter                    | often  |
+  | Stonemason                   | often  |
+  | Miner                        | seldom |
+  | Fortune teller               | scarce |
+  | Baker                        | seldom |
+  | Town guard                   | seldom |
+  | Town watch                   | often  |
+  | Rat catcher                  | seldom |
+  | Doctor                       | scarce |
+  | Messenger                    | scarce |
+  | Lawyer                       | scarce |
+  | Banker                       | scarce |
+  | Animal tamer                 | scarce |
+  | Guide                        | seldom |
+  | Cartographer                 | seldom |
+  | Sheriff                      | scarce |
+  | Dairy maid                   | seldom |
+  | Bookkeeper                   | seldom |
+  | Academic                     | seldom |
+  | Accountant                   | seldom |
+  | Actor                        | scarce |
+  | Apprentice                   | often  |
+  | Artisan                      | seldom |
+  | Assassin                     | rarely |
+  | Bandit                       | seldom |
+  | Bard                         | scarce |
+  | Beggar                       | often  |
+  | Bounty hunter                | seldom |
+  | Brewer                       | seldom |
+  | Con artist                   | scarce |
+  | Cook                         | often  |
+  | Druid                        | rarely |
+  | Fisher                       | seldom |
+  | Gambler                      | seldom |
+  | Gravedigger                  | seldom |
+  | Hunter                       | seldom |
+  | Jester                       | seldom |
+  | Knight                       | rarely |
+  | Laborer                      | often  |
+  | Lawman                       | seldom |
+  | Lumberjack                   | seldom |
+  | Mercenary                    | seldom |
+  | Noble                        | scarce |
+  | Priest                       | seldom |
+  | Ranger                       | rarely |
+  | Sailor                       | seldom |
+  | Scribe                       | seldom |
+  | Servant                      | often  |
+  | Shepherd                     | scarce |
+  | Slave                        | seldom |
+  | Soldier                      | seldom |
+  | Thief                        | seldom |
+  | Thug                         | seldom |
+  | Trader                       | seldom |
+  | Treasure Hunter              | rarely |
+  | Wanderer                     | scarce |
+  | Wizard                       | rarely |
+  | Wrestler                     | seldom |
+  | Lighthouse Keeper            | scarce |
+  | Landlord                     | seldom |
+  | Author                       | seldom |
+  | Lookout                      | seldom |
+  | Clocksmith                   | seldom |
+  | Exorcist                     | scarce |
+  | Soapmaker                    | seldom |
+  | Beekeeper                    | seldom |
+  | Botanist                     | seldom |
+  | Alchemist                    | seldom |
+  | Potioneer                    | seldom |
+  | Librarian                    | seldom |
+  | Bartender                    | seldom |
+  | Toymaker                     | seldom |
+  | Woodcarver                   | often  |
+  | Squire                       | seldom |
+  | Roofer                       | often  |
+  | Sculptor                     | seldom |
+  | Scholar                      | seldom |
+  | Nurse                        | often  |
+  | Mortician                    | seldom |
+  | Historian                    | seldom |
+  | Gladiator                    | seldom |
+  | Barber                       | seldom |
+  | Dockworker                   | often  |
+  | Bard, with magical abilities | rarely |
+  | Mayor                        | scarce |
