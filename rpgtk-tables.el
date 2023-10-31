@@ -35,10 +35,9 @@
 
 (require 'cl)
 (require 'subr-x)
-(require 'rpgtk-dice (expand-file-name "rpgtk-dice.el" (file-name-directory (buffer-file-name))))
 
-(defgroup rpgtk nil
-  "Customization for the Role Playing Game Toolkit.")
+(require 'rpgtk-dice (expand-file-name "rpgtk-dice.el" (file-name-directory (buffer-file-name))))
+(require 'rpgtk-messages (expand-file-name "rpgtk-messages.el" (file-name-directory (buffer-file-name))))
 
 (defcustom rpgtk-tables-directory
   (expand-file-name "tables" (file-name-directory (buffer-file-name)))
@@ -94,6 +93,15 @@ Store it by NAME in the `rpgtk-tables' hash table."
     (when (called-interactively-p nil)
       (message "Read: %s" name))
     (puthash name contents rpgtk-tables)))
+
+(defun rpgtk-tables-choose (table-name)
+  "Display an element from a file, TABLE-NAME.
+See `rpgtk-tables-choose-str' for details."
+  (interactive (list (completing-read "Choose from Table: "
+                                      (sort (hash-table-keys rpgtk-tables) #'string-lessp))))
+  (let ((results (rpgtk-tables-choose-str table-name)))
+    (kill-new results)
+    (rpgtk-message "%s" results)))
 
 (defun rpgtk-tables-choose-str (table-name)
   "Return random item from a table of a given TABLE-NAME string.

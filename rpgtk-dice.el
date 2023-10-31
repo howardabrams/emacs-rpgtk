@@ -31,6 +31,8 @@
 ;;
 ;;; Code:
 
+(require 'rpgtk-messages (expand-file-name "rpgtk-messages.el" (file-name-directory (buffer-file-name))))
+
 (defvar rpgtk-dice-previous-roll-expression nil
   "Store last dice expression, aa a string.
 This way, we can re-roll it again.")
@@ -444,14 +446,18 @@ and MODIFIER is the value to add/subtract to the sum, e.g. 2."
 (defun rpgtk-dice-roll-dnd-advantage (&optional modifier)
   "Return a dice sequence of two d20s, and the highest is kept.
 Note that MODIFIER is added to the results."
-  (rpgtk-dice-roll-mod (rpgtk-dice-roll 2 20)
-                       :max
-                       :add (or modifier 0)
-                       :sum))
+  (interactive "nRoll d20 modifier: ")
+  (let ((rolls (rpgtk-dice-roll-mod (rpgtk-dice-roll 2 20)
+                                    :max
+                                    :add (or modifier 0)
+                                    :sum)))
+    (rpgtk-message
+     (rpgtk-dice-format-roll rolls nil nil nil 20 1))))
 
 (defun rpgtk-dice-roll-dnd-disadvantage (&optional modifier)
   "Return a dice sequence of two d20s, and the lowest is kept.
 Note that MODIFIER is added to the results."
+  (interactive "nRoll d20 modifier: ")
   (rpgtk-dice-roll-mod (rpgtk-dice-roll 2 20)
                        :min
                        :add (or modifier 0)
