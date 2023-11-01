@@ -56,41 +56,66 @@
 ;;
 ;;; Code:
 
-(require 'ring)
-
 (defgroup rpgtk nil
   "Customization for the Role Playing Game Toolkit.")
 
-(defvar rpgtk-last-results (make-ring 10)
+(defvar rpgtk-last-results nil
   "The results from calls to `rpgtk-screen-' functions are stored here.")
 
 (defvar rpgtk-last-results-ptr 0
   "Keeps track of where we are in the message display ring.
 Each call to `rpgtk-last-results' resets this to 0.")
 
+(defcustom rpgtk-last-results-size 25
+  "Number of back results for RPGTK rolls and messages.
+See `rpgtk-last-results' for details."
+  :group 'rpgtk
+  :type '(number))
+
 (defun rpgtk-message (format-string &rest args)
   "Replace `messasge' function allowing it to be re-displayed.
 The FORMAT-STRING is a standard string for the `format' function,
-and ARGS are substitued values."
+and ARGS are substituted values."
   (let ((message (apply 'format format-string args)))
-    (ring-insert rpgtk-last-results message)
-    (kill-new message)
-    (rpgtk-last-results)))
+    (rpgtk-message2 message)))
 
-(defun rpgtk-last-results ()
-  "Display results from the last call to a `rpgtk-message' function."
-  (interactive)
+(defun rpgtk-message2 (display-msg &optional paste-msg)
+  "Display DISPLAY-MSG in the mini-buffer.
+Place PASTE-MSG on `kill-ring'."
+  (push (list display-msg paste-msg)
+        rpgtk-last-results)
   (setq rpgtk-last-results-ptr 0)
-  (message (ring-ref rpgtk-last-results rpgtk-last-results-ptr)))
+
+  ;; If the results list is too big, truncate it with this magic:
+  (when (< rpgtk-last-results-size (seq-length rpgtk-last-results))
+    (setf (cdr (nthcdr rpgtk-last-results-size rpgtk-last-results)) nil))
+
+  (rpgtk-last-results))
+
+(defun rpgtk-last-results (&optional replace)
+  "Display results from the last call to a `rpgtk-message' function.
+With PREFIX, display the number on the queue ring.
+With REPLACE, replace the last element on `kill-ring'
+instead of appending. See `kill-new' for details."
+  (interactive)
+  (if (= 0 (seq-length rpgtk-last-results))
+      (message "No previous results to show.")
+    (seq-let (display-msg paste-msg)
+        (nth rpgtk-last-results-ptr rpgtk-last-results)
+      (unless paste-msg
+        (setq paste-msg display-msg))
+      (kill-new (format "%s" paste-msg) replace)
+      (if replace
+          (message "%d> %s" rpgtk-last-results-ptr display-msg)
+        (message display-msg)))))
 
 (defun rpgtk-last-results-previous ()
   "Display results from an earlier call to `rpgtk-message'."
   (interactive)
-  (cl-incf rpgtk-last-results-ptr)
-  (when (>= rpgtk-last-results-ptr (ring-length rpgtk-last-results))
-    (setq rpgtk-last-results-ptr 0))
-  (message "%d> %s" rpgtk-last-results-ptr
-           (ring-ref rpgtk-last-results rpgtk-last-results-ptr)))
+  (when (< rpgtk-last-results-ptr
+           (1- (seq-length rpgtk-last-results)))
+    (cl-incf rpgtk-last-results-ptr))
+  (rpgtk-last-results t))
 
 (defun rpgtk-last-results-next ()
   "Display results from an later call to `rpgtk-message'.
@@ -98,13 +123,7 @@ Meant to be used with `rpgtk-last-results-previous'."
   (interactive)
   (when (> rpgtk-last-results-ptr 0)
     (cl-decf rpgtk-last-results-ptr))
-  (message "%d> %s" rpgtk-last-results-ptr
-           (ring-ref rpgtk-last-results rpgtk-last-results-ptr)))
-
-(defun rpgtk-paste-last-message ()
-  "Yank, e.g. paste, the last displayed message."
-  (interactive)
-  (insert (ring-ref rpgtk-last-results rpgtk-last-results-ptr)))
+  (rpgtk-last-results t))
 
 (provide 'rpgtk-messages)
 ;;; rpgtk-messages.el ends here
