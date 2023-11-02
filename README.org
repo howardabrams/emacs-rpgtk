@@ -4,59 +4,96 @@
 #+date:   2023-10-01 October
 #+tags:   emacs rpg solottrpg
 
-This project supplies a collection of functions in Emacs Lisp to allow developers to more easily craft RPG-inspired programs, especially Solo RPGs played in Org-formatted files.
+This project supplies a collection of functions in Emacs Lisp to allow
+developers to more easily craft RPG-inspired programs, especially Solo
+RPGs played in Org-formatted files.
 
-Sure, if you are a non-Lisper Emacs user, you may get some benefit, but this project is supposed to be a /toolkit/ for making (or at least, emulating) some typical TTRPGs (with or without the table).
+Sure, if you are a non-Lisper Emacs user, you may get some benefit,
+but this project is supposed to be a /toolkit/ for making (or at least,
+emulating) some typical TTRPGs (with or without the table of friends).
 
-Note that different /features/ are stored in different files, described in each of the following sections, as the idea, your “product” would =require= individual calls.
+Note that different /features/ are stored in different files, described
+in each of the following sections, as the idea, your “product” would
+=require= individual files.
 * Dice Rollers
-The basis of most games are random numbers, and RPGs have depended on dice. The [[file:rpgtk-dice.el][rpgtk-dice]] file contains functions for rolling dice, and displaying the results.
+The basis of most games are random numbers, and RPGs have depended on
+dice. The [[file:rpgtk-dice.el][rpgtk-dice]] file contains functions for rolling dice, and
+displaying the results.
 
-The function, =rpgtk-roll=, is the primary user interface, as it rolls a dice based on a /dice expression/, e.g. =2d6+4=, either at the point location or from a prompt from the user.
+The function, =rpgtk-roll=, is the primary user interface, as it rolls a
+dice based on a /dice expression/, e.g. =3d8+2=, either at the point
+location or from a prompt from the user.
 
-Other interesting functions are =rpgtk-roll-again= (to re-roll what was previously rolled), and =rpgtk-forward-roll= that moves the point to the next dice expression in the current buffer.
+[[file:images/screenshot-rpgtk-roll.png]]
 
-But a game designer would instead /craft/ the game’s specialty dice mechanic. For instance, for playing /Year Zero/-based games, like Vaesen, you roll a pool of six-sided dice, choose the highest, and see if it is a six.
+Notice in the example, the expression used is displayed on the right
+side, and all the dice and calculations are also displayed, as if you
+did the math.
 
-For instance, if your dice pool was 5, you  could roll the dice:
-#+begin_src emacs-lisp :results silent
-  (setq dice-roll (rpgtk-dice-roll 5 6))
-#+end_src
+Other interesting functions are =rpgtk-roll-again= (to re-roll what was
+previously rolled), and =rpgtk-forward-roll= that moves the point to the
+next dice expression in the current buffer.
 
-Pick the largest value:
-#+begin_src emacs-lisp :results silent
-  (setq results (rpgtk-dice-roll-mod dice-roll :max))
-#+end_src
+But a game designer would instead /craft/ the game’s specialty dice
+mechanic. For instance, for playing /Year Zero/-based games, like
+Vaesen, you roll a pool of six-sided dice, choose the highest, and see
+if it is a six.
 
-And display the results to see if they succeeded with:
-#+begin_src emacs-lisp :results silent
-  (rpgtk-dice-format-roll results "Pool" 6)
-#+end_src
-Where the =6= a parameter shows the value for a /successful roll/.
-
-To display to the user:
-#+begin_example
-6 … 「1 3 6 3 1」→「6」 | Pool
-#+end_example
-(Note that since the roll included a =6=, the initial =6= in the output message would be colorized a bright green to show success).
-
-Games based on /Blades in the Dark/ have a similar mechanic for rolling a pool of six-side dice, choosing the highest value, but instead of a single six being success, a dice of =4= or =5= is a partial success. We could make a complete function to simulate this dice mechanic:
+Using the =thread-first= macro, we can easily write a function:
 #+begin_src emacs-lisp
+  (defun year-zero-roll (dice-pool)
+    "Roll a DICE-POOL number of six sided dice.
+    The highest is displayed. All 6s are shown in green."
+    (interactive "nDice Pool Size: ")
+    (let* ((roll (rpgtk-dice-roll num-dice 6))
+           (high (rpgtk-dice-roll-mod roll :max)))
+      (rpgtk-message (rpgtk-dice-format-roll high "YZ" 6))))
+#+end_src
 
-  (defun rpgtk-dice-roll-bitd (num-dice)
+To display:
+[[file:images/screenshot-rpgtk-roll-yz.png]]
+
+Games based on /Blades in the Dark/ have a similar mechanic for rolling
+a pool of six-side dice, choosing the highest value, but instead of a
+single six being success, a dice of =4= or =5= is a partial success. We
+could make a complete function to simulate this dice mechanic:
+
+#+begin_src emacs-lisp
+  (defun blades-in-the-dark-roll (dice-pool)
     "Display formatted dice expression for Blades in the Dark.
   Where NUM-DICE are the number six-sided dice to roll."
     (interactive "nNumber of Dice: ")
-    (let* ((roll (rpgtk-dice-roll num-dice 6))
-           (high (rpgtk-dice-roll-mod roll :max)))
-      (message (rpgtk-dice-format-roll high "BitD" 6 4))))
+    (thread-first dice-pool
+                  (rpgtk-dice-roll 6)        ; Roll a pool of d6s
+                  (rpgtk-dice-roll-mod :max) ; Select the highest
+                  (rpgtk-dice-format-roll
+                   (format "%dd" dice-pool)  ; Create a dice expression (opt)
+                   6                         ; Set the success level
+                   4)                        ; Set partial success level
+                  (rpgtk-message)))
 #+end_src
 
-As a final example, in the 5th Edition of /Dungeons and Dragons/, a player can roll /with advantage/ by rolling two twenty-sided dice, choosing the higher of the two, and then adding their modifier bonus. The =-mod= function would look something like:
+If the highest roll was a 6, that is shown in a green color (actually
+based on the [[file:rpgtk-dice.el::(defface rpgtk-successful-roll][rpgtk-successful-roll]] face), and for a /partial success/,
+we use the [[file:rpgtk-dice.el::(defface rpgtk-middlin-roll][rpgtk-middlin-roll]] face:
+
+[[file:images/screenshot-rpgtk-roll-bitd1.png]]
+
+Otherwise, we show that value with a [[file:rpgtk-dice.el::(defface rpgtk-failed-roll][rpgtk-failed-roll]] face:
+
+[[file:images/screenshot-rpgtk-roll-bitd2.png]]
+
+As a final example, in the 5th Edition of /Dungeons and Dragons/, a
+player can roll /with advantage/ by rolling two twenty-sided dice,
+choosing the higher of the two, and then adding their =modifier= bonus.
+The =rpgtk-dice-roll-mod= function call would look something like:
+
 #+begin_src emacs-lisp
   (rpgtk-dice-roll-mod (rpgtk-dice-roll 2 20)
                        :max  ; Choose larger roll
                        :add (or modifier 0)
                        :sum)
 #+end_src
-See the function documentation for =rpgtk-dice-roll-mod= for  a list of modifications.
+
+See the function documentation for =rpgtk-dice-roll-mod= for a list of
+modifications.

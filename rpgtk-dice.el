@@ -321,7 +321,7 @@ integer value from rolling 2 four-sided die and adding 2."
 (defun rpgtk-dice-format-dice-roll (roll)
   "Convert ROLL from a list of dice rolled integers to a string."
   (if roll
-      (let ((roll-of-strs (seq-map 'number-to-string roll)))
+      (let ((roll-of-strs (seq-map (lambda (e) (format "%s" e)) roll)))
         (concat (propertize "「" 'face 'rpgtk-display-dice-sequence-border)
                 (propertize (string-join roll-of-strs " ")
                             'face 'rpgtk-display-dice-sequence)
@@ -467,7 +467,7 @@ Note that MODIFIER is added to the results."
   "Displays a formatted dice expression for Blades in the Dark.
 Where NUM-DICE are the number six-sided dice to roll."
   (interactive "nNumber of Dice: ")
-  (message  (thread-first num-dice
+  (rpgtk-message  (thread-first num-dice
                           (rpgtk-dice-roll 6)
                           (rpgtk-dice-roll-mod :max)
                           (rpgtk-dice-format-roll nil 6 4))))
