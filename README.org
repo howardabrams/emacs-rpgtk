@@ -97,3 +97,178 @@ The =rpgtk-dice-roll-mod= function call would look something like:
 
 See the function documentation for =rpgtk-dice-roll-mod= for a list of
 modifications.
+* Random Tables
+From Random Encounters, to Treasure Tables, to simply answering,
+“What’s the weather like?” RPGs have relied on randomly choosing
+entries from tables. This toolkit offers a function,
+=rpgtk-tables-load=, that parses a directory of text files
+(recursively). Then call =rpgtk-tables-choose= and select a random
+table, e.g.
+[[file:images/screenshot-rpgtk-choose-1.png]]
+
+Using fuzzy enhancers to =completing-read=, allows you to trim down the
+options:
+[[file:images/screenshot-rpgtk-choose-2.png]]
+
+And using something like Orderless, limits the choices even more:
+[[file:images/screenshot-rpgtk-choose-3.png]]
+
+Until you have what you want:
+[[file:images/screenshot-rpgtk-choose-4.png]]
+
+The random entry from the table is both displayed and copied to the
+clipboard, er, kill-ring.
+
+The table parsing function accepts three /types/ of formats for these
+text files:
+  - lists
+  - frequency tables
+  - dice tables
+** List Tables
+Most text files for these files contain a list of items. The file
+could contain items where each line is one entry, e.g.
+#+begin_example
+Grughuc Coinhelm
+Lobatin Flaskhide
+Koghurum Longgut
+Emgus Barbedpike
+Belbek Bronzehand
+Lasris Blazingblade
+Emthrun Stronghammer
+Thurthrum Norsk
+Gwynmura Rejuhkak
+Jintin Glowdust
+Gergrom Frosthorn
+Nysdille Heavybeard
+#+end_example
+
+Unlike published RPG material that relies on dice combinations, the
+beauty of these random selection tables is you can have any number of
+items, for instance, a list of seven items, can just have seven, and
+wouldn’t have to add an either item that says something like, “Roll
+twice on this table”.
+
+The entries in the files can also begin with /list characters/, i.e. ~-~,
+~+~, ~*~, and ~|~, so that the file can mimic an org-mode list or table.
+Lines beginning with ~#~ are ignored as comments, which allows a table
+writer to specify meta information, e.g.
+#+begin_example
+#+name: Elf Names
+#+property: source-url=https://www.fantasynamegenerators.com/elf-names.php
+
+  - Rydel Helegwyn
+  - Merellien Reywynn
+  - Ivasaar Theric
+  - Naertho Inanorin
+  - Folen Zumnorin
+  - Inchel Craroris
+  - Simimar Yesdove
+  - Cyran Qimaer
+  - Naeryndam Thelynn
+  - Eriladar Carsatra
+#+end_example
+
+Each entry can specify a random numerical value, e.g. for a Random
+Encounter Table,
+#+begin_example
+  - A group of 1d4+2 goblins gambling at dice
+  - A bugbear dangles 2d20+10' above the characters, ready to drop.
+  - A hobgoblin carries 1d4 bags of loot.
+  ...
+#+end_example
+Which could return:
+#+begin_example
+A bugbear dangles 31' above the characters, ready to drop.
+#+end_example
+
+Entries can also specify textual choices, e.g.
+#+begin_example
+  - A group of 1d4+2 [stealthy/drunk/sleeping/angry] goblins
+#+end_example
+Which could return:
+#+begin_example
+A group of 5 sleeping goblins
+#+end_example
+** Dice Tables
+A /dice table/ is a table that is easy to manipulate with dice, and is
+pretty typical in published supplements. The general idea is to roll
+one or more specific dice, and compare the number in the first column.
+
+For instance, /Xanathar's Guide to Everything/, a Dungeons &
+Dragons supplement from Wizards of the Coast, allows you to
+choose a random alignment for a character with the following table:
+
+| 3d6    | Alignment                                   |
+|--------|---------------------------------------------|
+| 3      | Chaotic evil (50%) or chaotic neutral (50%) |
+| 4--5   | Lawful evil                                 |
+| 6--8   | Neutral evil                                |
+| 9--12  | Neutral                                     |
+| 13--15 | Neutral good                                |
+| 16--17 | Lawful good (50%) or lawful neutral (50%)   |
+| 18     | Chaotic good (50%) or chaotic neutral (50%) |
+
+This would be render as a table with a range in the first column,
+and each equally weighted choice in the rest of the columns. For instance:
+
+#+begin_example
+Roll on Table: 3d6
+
+|      3 | Chaotic evil | chaotic neutral |
+|   4--5 | Lawful evil  |                 |
+|   6--8 | Neutral evil |                 |
+|  9--12 | Neutral      |                 |
+| 13--15 | Neutral good |                 |
+| 16--17 | Lawful good  | lawful neutral  |
+|     18 | Chaotic good | chaotic neutral |
+#+end_example
+
+Notice that we need to have a /dice expression/ to explain how to arrive
+at a number for selecting a row, and this is done with the text,
+=Roll on Table:= and a standard /dice expression/.
+
+These types of tables are good when rendering published material, but
+are obnoxious to create.
+** Frequency Tables
+
+While the a table could be simple lists to choose a random element,
+some lists could return /some elements/ more often than /other elements/.
+While that sounds great in a sentence, this code in this section
+describes this concept of /frequency tables/. For instance, here is a
+Faction Encounter table:
+
+#+begin_example
+
+ | Church of Talos :: Worshipers of the god of storms/destruction.   | scarcely   |
+ | City Watch :: Members of the Waterdeep constabulary.              | often      |
+ | Cult of the Dragon :: Cultists who venerate evil dragons.         | seldom     |
+ | Emerald Enclave :: Alliance of druids/rangers to defend the wilds | seldom     |
+ | Enclave of Red Magic :: Thayan mages who smuggle slaves           | sometimes  |
+ | Force Grey :: League of heroes sworn to protect Waterdeep.        | often      |
+ | Halaster’s Heirs :: Dark arcanists trained at a hidden academy    | rarely     |
+ | The Kraken Society :: Shadowy group of thieves and mages          | rarely     |
+ ...
+#+end_example
+
+While Waterdeep could have over 50 factions running around, we
+would assume players would run into the City Watch more often than
+the delusional members of the /Kraken Society/.
+
+Unlike a normal list, these text files have two columns, where the
+first is the item and the second determines the frequency, which can
+either be from this group:
+
+   - =rarely=
+   - =seldom= or =sometimes=, which is twice as likely as =rarely=
+   - =scarcely= , =scarce= or =hardly ever=, which is three-times more
+     likely than =rarely=
+   - =often=, which is four-times more likely than =rarely=
+
+Or this group:
+     - =legendary=
+     - =veryrare=, =very-rare=, or =very rare=, which is /twice/ =legendary=
+     - =rare=, which is /four-times/ the occurrence of =legendary=
+     - =uncommon=, is /seven-times/ the occurrence of =legendary=
+     - =common=, is /twelve-times/ more likely to be selected
+
+As you can tell, the current implementation, while useful, is quite awful for a /toolkit/, and we need to change the code to allow a table-writer to specify the frequency levels and grouping, and not rely on English semantics.

@@ -100,8 +100,7 @@ See `rpgtk-tables-choose-str' for details."
   (interactive (list (completing-read "Choose from Table: "
                                       (sort (hash-table-keys rpgtk-tables) #'string-lessp))))
   (let ((results (rpgtk-tables-choose-str table-name)))
-    (kill-new results)
-    (rpgtk-message "%s" results)))
+    (rpgtk-message2 (format "%s: %s" table-name results) results)))
 
 (defun rpgtk-tables-choose-str (table-name)
   "Return random item from a table of a given TABLE-NAME string.
@@ -204,7 +203,7 @@ would be converted randomly to something like: 'You found a box.'"
 ;;  | Halaster’s Heirs :: Dark arcanists trained at a hidden academy    | rarely     |
 ;;  | The Kraken Society :: Shadowy group of thieves and mages          | rarely     |
 ;;
-;; While a Waterdeep could have over 50 factions running around, we
+;; While Waterdeep could have over 50 factions running around, we
 ;; would assume players would run into the City Watch more often than
 ;; the delusional members of the /Kraken Society/.
 ;;
@@ -298,7 +297,7 @@ For instance, `veryrare' and `very-rare' are the same."
 ;;
 ;;   - often : 4
 ;;   - seldom : 3
-;;   - scarely : 2
+;;   - scarcely : 2
 ;;   - rarely : 1
 ;;
 ;; Is coded with the following list of lists:
