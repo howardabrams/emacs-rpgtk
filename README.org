@@ -104,16 +104,24 @@ entries from tables. This toolkit offers a function,
 =rpgtk-tables-load=, that parses a directory of text files
 (recursively). Then call =rpgtk-tables-choose= and select a random
 table, e.g.
+
+#+attr_org: :width 600
 [[file:images/screenshot-rpgtk-choose-1.png]]
 
 Using fuzzy enhancers to =completing-read=, allows you to trim down the
 options:
+
+#+attr_org: :width 600
 [[file:images/screenshot-rpgtk-choose-2.png]]
 
-And using something like Orderless, limits the choices even more:
+And using something like [[https://github.com/oantolin/orderless][Orderless]], limits the choices even more:
+
+#+attr_org: :width 600
 [[file:images/screenshot-rpgtk-choose-3.png]]
 
 Until you have what you want:
+
+#+attr_org: :width 600
 [[file:images/screenshot-rpgtk-choose-4.png]]
 
 The random entry from the table is both displayed and copied to the
