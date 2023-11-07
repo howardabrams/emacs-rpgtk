@@ -279,4 +279,47 @@ Or this group:
      - =uncommon=, is /seven-times/ the occurrence of =legendary=
      - =common=, is /twelve-times/ more likely to be selected
 
-As you can tell, the current implementation, while useful, is quite awful for a /toolkit/, and we need to change the code to allow a table-writer to specify the frequency levels and grouping, and not rely on English semantics.
+As you can tell, the current implementation, while useful, is quite
+awful for a /toolkit/, and we need to change the code to allow a
+table-writer to specify the frequency levels and grouping, and not
+rely on English semantics.
+* Result Messages
+Unlike regular Emacs call to =message=, strings sent to =rpgtk-message=
+are available to be /re-seen/.
+
+  - =rpgtk-last-results= : shows the last results
+  - =rpgtk-last-results-previous= : shows earlier results, can be called
+    repeatedly after calling =rpgtk-last-results=.
+  - =rpgtk-last-results-next= : shows a later result, and would be
+    called after a call to =rpgtk-last-results-previous=.
+
+While each of these functions can be bound to keys, it might be easier
+to bind a key to =rpgtk-last-message= shows the last message previous
+shown (for instance, a dice roll or an entry from a table), and if
+Hydra has been installed, allows the user to iterate over previous
+messages.
+
+For instance, after walking through a forest, in some acclimate
+weather, our hero befriends a dwarf, rolling a pretty good score.
+“What did you say her name was again?” they say … no problem, you call
+=rpgtk-last-message= to see:
+
+[[file:images/screenshot-rpgtk-last-message-1.png]]
+
+Pressing ~j~ (since you’ve installed Evil, otherwise, it would be ~p~),
+you see the name of the dwarf:
+
+[[file:images/screenshot-rpgtk-last-message-2.png]]
+
+Press it again to remind you of the random weather your table reported:
+
+[[file:images/screenshot-rpgtk-last-message-3.png]]
+
+*Note:* The last message seen using any of these commands can be
+inserted into the buffer with a standard call to =yank=.
+
+For RPG designers, you should call =rpgtk-message2=, as it takes a
+message to be shown to the user, as well as a second string that could
+be pasted. For instance, when viewing a dice roll, the message is
+pretty verbose, but when the roll is inserted into the buffer, only
+the total would be inserted.

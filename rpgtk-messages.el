@@ -125,5 +125,31 @@ Meant to be used with `rpgtk-last-results-previous'."
     (cl-decf rpgtk-last-results-ptr))
   (rpgtk-last-results t))
 
+(if (not (fboundp 'defhydra))
+    (defun rpgtk-last-message ()
+      "Display the last RPG Toolkit message."
+      (interactive)
+      (rpgtk-last-results))
+
+  (if (fboundp 'evil-mode)
+      (defhydra rpgtk-messages (:color pink :hint nil)
+        ("k" rpgtk-last-results-previous "previous message")
+        ("j" rpgtk-last-results-next "next message")
+        ("p" yank "paste message")
+        ("q" nil "quit"))
+
+    (defhydra rpgtk-messages (:color pink :hint nil)
+      ("p" rpgtk-last-results-previous "previous message")
+      ("n" rpgtk-last-results-next "next message")
+      ("y" yank "yank message")
+      ("q" nil "quit")))
+
+  (defun rpgtk-last-message ()
+    "Display the last RPG Toolkit message.
+  Present a hydra allowing user to see previous messages."
+    (interactive)
+    (rpgtk-last-results)
+    (rpgtk-messages/body)))
+
 (provide 'rpgtk-messages)
 ;;; rpgtk-messages.el ends here
