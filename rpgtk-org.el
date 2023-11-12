@@ -116,6 +116,15 @@ The key can be a string or symbol. If PREFIX is nil, use value of
                  (upcase)
                  (intern))))
 
+(defun rpgtk-org--property-key-string (prefix key)
+  "Create symbol by combining PREFIX and KEY for org properties.
+The key can be a string or symbol. If PREFIX is nil, use value of
+`rpgtk-org-default-property-prefix'."
+  (let ((pre (or prefix rpgtk-org-default-property-prefix)))
+    (thread-last key
+                 (format "%s-%s" pre)
+                 (upcase))))
+
 (defun rpgtk-org--string-to-list (str)
   "Convert STR to a list of elements, split on space characters.
 This recursive function looks for the following tokens:
@@ -167,6 +176,19 @@ Otherwise, return VALUE as a string."
     (rpgtk-org--string-to-list value))
    (t value)))
 
+(defun rpgtk-org--property-value-string (value)
+  "Return VALUE as a string suitable for Org properties."
+  (let ((convert-value (lambda (v)
+                         (cond
+                          ((and (stringp v) (string-match-p (rx "\"") v))
+                           (format "'%s'" v))
+                          ((stringp v) (format "\"%s\"" v))
+                          ((numberp v) (number-to-string v))
+                          ((symbolp v) (format ":%s" (symbol-name v)))))))
+    (if (listp value)
+        (string-join (seq-map convert-value value) " ")
+      (funcall convert-value value))))
+
 ;; --------------------
 
 (defun rpgtk-org--read-property (prop-key)
@@ -192,6 +214,34 @@ value of `rpgtk-org-default-property-prefix'."
         (setq results (rpgtk-org--read-property key))
         (unless results (org-up-heading)))
       results)))
+
+
+(defun rpgtk-org-create-property (prop value &optional prefix)
+  "Set PROP as a Org Property at the first heading level in document.
+The VALUE can be a string, number, or a list of symbols, numbers, and text.
+The symbol or string, PREFIX, if not-nil is pre-pended to the PROP key,
+and if nil, it defaults to `rpgtk-org-default-property-prefix'."
+  (save-excursion
+    (org-top-heading)
+    (rpgtk-org--set-property prop value prefix)))
+
+(defun rpgtk-org-set-property (prop value &optional prefix)
+  "Set PROP as a Org Property at current heading level in document.
+The VALUE can be a string, number, or a list of symbols, numbers, and text.
+The symbol or string, PREFIX, if not-nil is pre-pended to the PROP key,
+and if nil, it defaults to `rpgtk-org-default-property-prefix'."
+  (save-excursion
+    (unless (org-at-heading-p)
+      (org-up-heading))
+    (rpgtk-org--set-property prop value prefix)))
+
+(defun rpgtk-org--set-property (property value prefix)
+  "Helper function for storing PREFIX + PROPERTY with VALUE in org buffer.
+This assumes that point is currently at the header where the property
+should be stored."
+ (let ((key (rpgtk-org--property-key-string prefix property))
+       (val (rpgtk-org--property-value-string value)))
+   (org-set-property key val)))
 
 (provide 'rpgtk-org)
 ;;; rpgtk-org.el ends here

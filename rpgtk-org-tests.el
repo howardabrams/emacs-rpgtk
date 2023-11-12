@@ -86,5 +86,19 @@
     (should (= 42 (rpgtk-org-read-property "foobar" "rpg")))
     (should (= 42 (rpgtk-org-read-property "foobar")))))
 
+(ert-deftest rpgtk-org--property-value-string-test ()
+  (should (equal "42" (rpgtk-org--property-value-string 42)))
+  (should (equal "\"foobar\"" (rpgtk-org--property-value-string "foobar")))
+  (should (equal "'Dwayne \"The Rock\" Johnson'"
+                 (rpgtk-org--property-value-string "Dwayne \"The Rock\" Johnson")))
+  (should (equal ":foobar" (rpgtk-org--property-value-string 'foobar)))
+  (should (equal ":foobar 42 \"just notes\""
+                 (rpgtk-org--property-value-string
+                  '(foobar 42 "just notes")))))
+
+(ert-deftest rpgtk-org-property-value-identity-test ()
+  (let ((v '(strength 19 "very strong")))
+    (should (equal v (rpgtk-org--property-value
+                      (rpgtk-org--property-value-string v))))))
 (provide 'rpgtk-org-tests)
 ;;; rpgtk-org-tests.el ends here
