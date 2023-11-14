@@ -1,0 +1,99 @@
+#+title:  Character Example
+#+author: Howard Abrams
+#+email:  howard@sting
+#+date:   2023-11-07 November
+#+tags:   rpg
+
+The document is both an example for making a character sheet (journal) with the RPG Toolkit project, but also demonstrating how to use the functions in the [[file:rpgtk-org.el][rpgtk-org]] source code.
+
+* Story of Bram
+:PROPERTIES:
+:HEADERS-ARGS:emacs-lisp: :results none raw
+:RPG-STRENGTH: 18
+:RPG-INTELLIGENCE: 8
+:RPG-CHARISMA: 15
+:END:
+
+The top-level header should contain all the properties that define the PC (that probably shouldn’t change). In D&D, this would be stuff like attributes, e.g. Strength and Intelligence. Health may change, so that value would go in other, lower levels, but could be defined as a /maximum/ level here.
+
+Properties can be set with strings and numbers, e.g.:
+#+begin_src emacs-lisp
+  (rpgtk-org-create-property "strength" 18)
+#+end_src
+
+And read in a same way, using =rpgtk-org-read-property=:
+#+begin_src emacs-lisp :results replace scalar
+  (rpgtk-org-read-property "strength")
+#+end_src
+
+#+RESULTS:
+: 18
+
+However, properties can be set with symbols, too:
+#+begin_src emacs-lisp
+  (rpgtk-org-create-property 'intelligence 8)
+#+end_src
+
+Note that we can mix and match, so the following works:
+
+#+begin_src emacs-lisp :results replace scalar
+  (rpgtk-org-create-property 'charisma 15)
+  (rpgtk-org-read-property "charisma")
+#+end_src
+
+#+RESULTS:
+: 15
+
+Notice that while our property is /charisma/, in the property drawer associated with this section, our property is =rpg-charisma=.
+
+Each of these properties accepts a /prefix/ allowing you to namespace it for your particular game rules. If it isn’t specified, it defaults to =rpgtk-org-default-property-prefix=, which starts out as =rpg= (but is designed for you to change it).
+
+** Functions for Adjusting Properties
+:PROPERTIES:
+:headers-args:emacs-lisp: :results none
+:END:
+
+Before we continue describing the character’s adventures, let’s state
+that each sub-header can have its own /properties/. For instance, this
+heading my describe a challenging conflict, and we could track that
+with a property value.
+
+For this example, let’s use =health-points=. While the
+=rpgtk-org-create-property= function always sets the value at the
+top-most heading level, the =-set-property= sets them at the current
+heading:
+
+#+begin_src emacs-lisp
+  (rpgtk-org-set-property 'health-points 17)
+#+end_src
+
+In this case, this function is like the =org-set-property=, however, you don’t have to have the point on the heading.
+
+We can also change it to a different value, for instance, our hero may have been slugged hard in the arm:
+
+#+begin_src emacs-lisp
+  (rpgtk-org-update-property 'health-points 16)
+#+end_src
+
+The =-update-property= assume that we already know what the new value
+should be, while the =-adjust-property= function can change the value by
+a relative amount:
+
+#+begin_src emacs-lisp
+  (rpgtk-org-adjust-property 'health-points -3)
+#+end_src
+
+The adjustment can also accept a function to make the modification. For instance, the vial of acid crashing to the floor can drop his health in half:
+
+#+begin_src emacs-lisp
+  (rpgtk-org-adjust-property 'health-points
+         (lambda (current-value) (/ current-value 2)))
+#+end_src
+
+While we could call =-delete-property= to remove the property, we probably don’t need to bother, as the property is only available when the point is in this section (below this heading) or in lower sections.
+
+#+begin_src emacs-lisp
+  (rpgtk-org-delete-property 'health-points)
+#+end_src
+
+In other words, creating a new /sibling/ section heading effectively moves the property out of scope.

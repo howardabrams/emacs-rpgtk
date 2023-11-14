@@ -239,9 +239,106 @@ and if nil, it defaults to `rpgtk-org-default-property-prefix'."
   "Helper function for storing PREFIX + PROPERTY with VALUE in org buffer.
 This assumes that point is currently at the header where the property
 should be stored."
- (let ((key (rpgtk-org--property-key-string prefix property))
-       (val (rpgtk-org--property-value-string value)))
-   (org-set-property key val)))
+  ;; Convert all values given to strings:
+  (let ((key (rpgtk-org--property-key-string prefix property))
+        (val (rpgtk-org--property-value-string value)))
+    (org-set-property key val)))
+
+
+(defun rpgtk-org-update-property (property value &optional
+                                           prefix error-if-missing)
+  "Search org document, updating PROPERTY with VALUE when found.
+If not found, throw `rpgtk-missing-property' if ERROR-IF-MISSING
+is non-nil. PREFIX, if set, is pre-pended to PROPERTY, and if not
+set, `rpgtk-org-default-property-prefix' is pre-pended."
+  (let ((key (rpgtk-org--property-key prefix property)))
+    (save-excursion
+      (unless (org-at-heading-p)
+        (org-up-heading))
+      (rpgtk-org--update-property key value error-if-missing))))
+
+(defun rpgtk-org--reset-property (prop curr-value adjustment)
+  "Called by `rpgtk-org--update-property' to set Org property, PROP.
+CURR-VALUE is the current value of the property.
+
+If ADJUSTMENT is nil, we assume we are to delete the PROP
+property. If ADJUSTMENT is a function (lambda expression), then
+we call the function with CURR-VALUE, and the results are used as
+a new value (after being converted to a string with
+`rpgtk-org--property-value-string'.
+
+Otherwise, ADJUSTMENT is used as the new value, replacing CURR-VALUE."
+  (let ((prop-str (thread-first prop
+                               (symbol-name)
+                               (substring 1))))
+    (cond
+     ((null adjustment)
+      (org-delete-property prop-str))
+     ((functionp adjustment)
+      (org-set-property prop-str
+                        (rpgtk-org--property-value-string
+                         (funcall adjustment curr-value))))
+     (t
+      (org-set-property prop-str
+                        (rpgtk-org--property-value-string
+                         adjustment))))))
+
+(defun rpgtk-org--update-property (prop value error-if-missing)
+  "Helper function for `rpgtk-org-update-property'.
+See that function for PROP, VALUE and ERROR-IF-MISSING
+parameters."
+  (let ((props (org-element--get-node-properties)))
+
+    ;; if current heading contains our property, set or delete it:
+    (if-let ((curr-value (rpgtk-org--property-value
+                          (plist-get props prop 'equal))))
+        (rpgtk-org--reset-property prop curr-value value)
+
+      ;; otherwise, if we are at the top, we throw an error,
+      ;; or set it depending:
+      (if (= 1 (org-heading-level))
+          (if error-if-missing
+              (throw rpgtk-missing-property
+                     (format "Property '%s' not found" prop))
+            (org-set-property prop value))
+
+        ;; Didn't find the property and have higher headings to
+        ;; search? Go up a heading level, and search again:
+        (org-up-heading)
+        (rpgtk-org--update-property prop value error-if-missing)))))
+
+
+(defun rpgtk-org-adjust-property (property value-adj &optional prefix)
+  "Search ord document, adjusting PROPERTY with VALUE-ADJ when found.
+If VALUE-ADJ is a number, it is added to the current property's
+value.
+
+If VALUE-ADJ is a function that takes a single argument,
+then the property's value is replaced by applying the function to
+the current value.
+
+PREFIX, if set, is pre-pended to PROPERTY, and if not set,
+`rpgtk-org-default-property-prefix' is pre-pended."
+  (let ((key (rpgtk-org--property-key prefix property))
+        (value-func (if (numberp value-adj)
+                        (lambda (x) (+ x value-adj))
+                      ;; We assume that `value-adj' is a function:
+                      value-adj)))
+    (save-excursion
+      (unless (org-at-heading-p)
+        (org-up-heading))
+      (rpgtk-org--update-property key value-func nil))))
+
+(defun rpgtk-org-delete-property (property &optional prefix)
+  "Search org document, deleting PROPERTY if found.
+PREFIX, if set, is pre-pended to PROPERTY, and if not set,
+`rpgtk-org-default-property-prefix' is pre-pended."
+  (let ((key (rpgtk-org--property-key prefix property)))
+    (save-excursion
+      (unless (org-at-heading-p)
+        (org-up-heading))
+      (rpgtk-org--update-property key nil nil))))
+
 
 (provide 'rpgtk-org)
 ;;; rpgtk-org.el ends here
