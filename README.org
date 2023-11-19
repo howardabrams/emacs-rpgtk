@@ -5,16 +5,16 @@
 #+tags:   emacs rpg solottrpg
 
 This project supplies a collection of functions in Emacs Lisp to allow
-developers to more easily craft RPG-inspired programs, especially Solo
-RPGs played in Org-formatted files.
+developers to craft RPG-inspired programs, with a focus on Solo RPGs
+played in Org-formatted files.
 
 Sure, if you are a non-Lisper Emacs user, you may get some benefit,
-but this project is supposed to be a /toolkit/ for making (or at least,
-emulating) some typical TTRPGs (with or without the table of friends).
+but this project is a /toolkit/ for making (or at least, emulating) some
+typical TTRPGs (with or without the table of friends).
 
-Note that different /features/ are stored in different files, described
-in each of the following sections, as the idea, your “product” would
-=require= individual files.
+Note that we store different /features/ in different files, described in
+each of the following sections. Your project would =require= the
+individual files you need.
 * Dice Rollers
 The basis of most games are random numbers, and RPGs have depended on
 dice. The [[file:rpgtk-dice.el][rpgtk-dice]] file contains functions for rolling dice, and
@@ -26,24 +26,28 @@ location or from a prompt from the user.
 
 [[file:images/screenshot-rpgtk-roll.png]]
 
-Notice in the example, the expression used is displayed on the right
+Notice in the example, the code displays the expression used on the right
 side, and all the dice and calculations are also displayed, as if you
 did the math.
 
-Other interesting functions are =rpgtk-roll-again= (to re-roll what was
-previously rolled), and =rpgtk-forward-roll= that moves the point to the
-next dice expression in the current buffer.
+Other interesting functions are =rpgtk-roll-again= (to re-roll previous
+rolls), and =rpgtk-forward-roll= that moves the point to the next dice
+expression in the current buffer.
 
-But a game designer would instead /craft/ the game’s specialty dice
-mechanic. For instance, for playing /Year Zero/-based games, like
-Vaesen, you roll a pool of six-sided dice, choose the highest, and see
-if it is a six.
+Game often /craft/ the game’s specialty dice mechanic. For instance, in
+playing /Year Zero/-based games, like Vaesen, you roll a pool of
+six-sided dice, choose the highest, and see if you rolled a six.
 
-Using the =thread-first= macro, we can easily write a function:
+A dice mechanic involves three steps:
+  1. Rolling one or more dice, using =rpgtk-dice-roll=
+  2. Modifying the results through a series of steps using =rpgtk-dice-roll-mod=
+  3. Displaying the results using =rpgtk-dice-format-roll=
+
+For instance:
 #+begin_src emacs-lisp
   (defun year-zero-roll (dice-pool)
     "Roll a DICE-POOL number of six sided dice.
-    The highest is displayed. All 6s are shown in green."
+    Displays the highest value. Shows 6s in green."
     (interactive "nDice Pool Size: ")
     (let* ((roll (rpgtk-dice-roll num-dice 6))
            (high (rpgtk-dice-roll-mod roll :max)))
@@ -73,9 +77,9 @@ could make a complete function to simulate this dice mechanic:
                   (rpgtk-message)))
 #+end_src
 
-If the highest roll was a 6, that is shown in a green color (actually
-based on the [[file:rpgtk-dice.el::(defface rpgtk-successful-roll][rpgtk-successful-roll]] face), and for a /partial success/,
-we use the [[file:rpgtk-dice.el::(defface rpgtk-middlin-roll][rpgtk-middlin-roll]] face:
+If the highest roll was a 6, the function shows it in a green color
+(actually based on the [[file:rpgtk-dice.el::(defface rpgtk-successful-roll][rpgtk-successful-roll]] face), and for a /partial
+success/, we use the [[file:rpgtk-dice.el::(defface rpgtk-middlin-roll][rpgtk-middlin-roll]] face:
 
 [[file:images/screenshot-rpgtk-roll-bitd1.png]]
 
@@ -98,12 +102,11 @@ The =rpgtk-dice-roll-mod= function call would look something like:
 See the function documentation for =rpgtk-dice-roll-mod= for a list of
 modifications.
 * Random Tables
-From Random Encounters, to Treasure Tables, to simply answering,
-“What’s the weather like?” RPGs have relied on randomly choosing
-entries from tables. This toolkit offers a function,
-=rpgtk-tables-load=, that parses a directory of text files
-(recursively). Then call =rpgtk-tables-choose= and select a random
-table, e.g.
+From Random Encounters, to Treasure Tables, to answering, “What’s the
+weather like?” RPGs have relied on randomly choosing entries from
+tables. This toolkit offers a function, =rpgtk-tables-load=, that parses
+a directory of text files (recursively). Then call =rpgtk-tables-choose=
+and select a random table, e.g.
 
 #+attr_html: :width 600px
 [[file:images/screenshot-rpgtk-choose-1.png]]
@@ -152,13 +155,13 @@ Nysdille Heavybeard
 
 Unlike published RPG material that relies on dice combinations, the
 beauty of these random selection tables is you can have any number of
-items, for instance, a list of seven items, can just have seven, and
-wouldn’t have to add an either item that says something like, “Roll
-twice on this table”.
+items. For instance, a list may have seven items, and you wouldn’t
+have to add either an item or an entry that says, “Roll twice on this
+table”.
 
-The entries in the files can also begin with /list characters/, i.e. ~-~,
-~+~, ~*~, and ~|~, so that the file can mimic an org-mode list or table.
-Lines beginning with ~#~ are ignored as comments, which allows a table
+The entries in the files can begin with /list characters/, i.e. ~-~, ~+~,
+~*~, and ~|~. This allows the file to mimic an org-mode list or table. The
+code ignores lines beginning with ~#~ as comments, which allows a table
 writer to specify meta information, e.g.
 #+begin_example
 #+name: Elf Names
@@ -182,7 +185,7 @@ Encounter Table,
   - A group of 1d4+2 goblins gambling at dice
   - A bugbear dangles 2d20+10' above the characters, ready to drop.
   - A hobgoblin carries 1d4 bags of loot.
-  ...
+  …
 #+end_example
 Which could return:
 #+begin_example
@@ -249,7 +252,7 @@ choose a random alignment for a character with the following table:
 | 18     | Chaotic good (50%) or chaotic neutral (50%) |
 
 This would be render as a table with a range in the first column,
-and each equally weighted choice in the rest of the columns. For instance:
+and equally weighted choices in the rest of the columns. For instance:
 
 #+begin_example
 Roll on Table: 3d6
@@ -264,8 +267,8 @@ Roll on Table: 3d6
 #+end_example
 
 Notice that we need to have a /dice expression/ to explain how to arrive
-at a number for selecting a row, and this is done with the text,
-=Roll on Table:= and a standard /dice expression/.
+at a number for selecting a row. To do this, add the text,
+=Roll on Table= and a standard /dice expression/.
 
 These types of tables are good when rendering published material, but
 are obnoxious to create.
@@ -279,15 +282,15 @@ Faction Encounter table:
 
 #+begin_example
 
- | Church of Talos :: Worshipers of the god of storms/destruction.   | scarcely   |
- | City Watch :: Members of the Waterdeep constabulary.              | often      |
- | Cult of the Dragon :: Cultists who venerate evil dragons.         | seldom     |
+ | Church of Talos :: Worshipers of the god of storms/destruction    | scarcely   |
+ | City Watch :: Members of the Waterdeep constabulary               | often      |
+ | Cult of the Dragon :: Cultists who venerate evil dragons          | seldom     |
  | Emerald Enclave :: Alliance of druids/rangers to defend the wilds | seldom     |
  | Enclave of Red Magic :: Thayan mages who smuggle slaves           | sometimes  |
- | Force Grey :: League of heroes sworn to protect Waterdeep.        | often      |
+ | Force Grey :: League of heroes sworn to protect Waterdeep         | often      |
  | Halaster’s Heirs :: Dark arcanists trained at a hidden academy    | rarely     |
  | The Kraken Society :: Shadowy group of thieves and mages          | rarely     |
- ...
+ …
 #+end_example
 
 While Waterdeep could have over 50 factions running around, we
@@ -320,15 +323,15 @@ Unlike regular Emacs call to =message=, strings sent to =rpgtk-message=
 are available to be /re-seen/.
 
   - =rpgtk-last-results= : shows the last results
-  - =rpgtk-last-results-previous= : shows earlier results, can be called
-    repeatedly after calling =rpgtk-last-results=.
-  - =rpgtk-last-results-next= : shows a later result, and would be
+  - =rpgtk-last-results-previous= : shows earlier results, called
+    multiple times after calling =rpgtk-last-results=.
+  - =rpgtk-last-results-next= : shows a later result, and
     called after a call to =rpgtk-last-results-previous=.
 
-While each of these functions can be bound to keys, it might be easier
-to bind a key to =rpgtk-last-message= shows the last message previous
-shown (for instance, a dice roll or an entry from a table), and if
-Hydra has been installed, allows the user to iterate over previous
+While you can bind each of these functions to keys, it might be easier
+to bind a key to =rpgtk-last-message= to show the latest message shown
+(for instance, a dice roll or an entry from a table), and assuming a
+user has installed Hydra, allows the user to iterate over previous
 messages.
 
 For instance, after walking through a forest, in some acclimate
@@ -347,11 +350,11 @@ Press it again to remind you of the random weather your table reported:
 
 [[file:images/screenshot-rpgtk-last-message-3.png]]
 
-*Note:* The last message seen using any of these commands can be
-inserted into the buffer with a standard call to =yank=.
+*Note:* The user may insert the last message seen using any of these
+commands, with a standard call to =yank=.
 
 For RPG designers, you should call =rpgtk-message2=, as it takes a
-message to be shown to the user, as well as a second string that could
-be pasted. For instance, when viewing a dice roll, the message is
-pretty verbose, but when the roll is inserted into the buffer, only
-the total would be inserted.
+message shown to the user, as well as a second string for the user to
+paste. For instance, when viewing a dice roll, the message is verbose,
+but when yanking the roll into the buffer, the total is all that is in
+the kill-ring.
