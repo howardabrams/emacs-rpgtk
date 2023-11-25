@@ -50,6 +50,36 @@
       (when tag
         (should (equal (match-string 2 line) tag))))))
 
+(ert-deftest rpgtk-tables--choose-string-list ()
+  (let ((empty-string "")
+        (no-op-string "This is just a phrase.")
+        (two-choices  "We can have [this/that]")
+        (two-choices1 "We can have this")
+        (two-choices2 "We can have that")
+        (tri-choices  "We can have [this / that / the other].")
+        (tri-choices1 "We can have this.")
+        (tri-choices2 "We can have that.")
+        (tri-choices3 "We can have the other."))
+
+    (should (string-equal (rpgtk-tables--choose-string-list empty-string)
+                          empty-string))
+    (should (string-equal (rpgtk-tables--choose-string-list no-op-string)
+                          no-op-string))
+    (let ((chosen (rpgtk-tables--choose-string-list two-choices)))
+      (should (or (string-equal chosen two-choices1)
+                  (string-equal chosen two-choices2))))
+    (let ((chosen (rpgtk-tables--choose-string-list tri-choices)))
+      (should (or (string-equal chosen tri-choices1)
+                  (string-equal chosen tri-choices2)
+                  (string-equal chosen tri-choices3))))))
+
+(ert-deftest rpgtk-tables-choose-string-from-table-test ()
+  (flet ((rpgtk-tables-choose-str (table-name) "wonderful"))
+    (should (string-equal
+             "The weather suddenly turns wonderful."
+             (rpgtk-tables--choose-string-from-table
+              "The weather suddenly turns <<weather/summer>>.")))))
+
 (ert-deftest rpgtk-tables-relevel-table-test ()
   ;; Need to make a fake table, so we will just have a single entry in this
   ;; table, with a tag of "often". We'll specify that the weight for this should

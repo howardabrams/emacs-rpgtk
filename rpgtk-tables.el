@@ -97,8 +97,10 @@ Store it by NAME in the `rpgtk-tables' hash table."
 (defun rpgtk-tables-choose (table-name)
   "Display an element from a file, TABLE-NAME.
 See `rpgtk-tables-choose-str' for details."
-  (interactive (list (completing-read "Choose from Table: "
-                                      (sort (hash-table-keys rpgtk-tables) #'string-lessp))))
+  (interactive
+   (list
+    (completing-read "Choose from Table: "
+                     (sort (hash-table-keys rpgtk-tables) #'string-lessp))))
   (let ((results (rpgtk-tables-choose-str table-name)))
     (rpgtk-message2 (format "%s: %s" table-name results) results)))
 
@@ -123,6 +125,8 @@ dice table (see `rpgtk-tables--choose-dice-table')."
       (thread-first result
                     ;; Replace dice expression in the message with an roll:
                     (rpgtk-dice-format-string)
+                    ;; Replace <<table-name>> with results from table:
+                    (rpgtk-tables--choose-string-from-table)
                     ;; Replace [one/two/three] with one of those words:
                     (rpgtk-tables--choose-string-list)))))
 
@@ -136,10 +140,19 @@ dice table (see `rpgtk-tables--choose-dice-table')."
 For instance, the string: 'You found a [chair/box/statue]'
 would be converted randomly to something like: 'You found a box.'"
   (let ((regexp (rx "[" (+? any) "/" (+? any) "]"))
-        (subbed (lambda (str) (--> str
-                              (substring it 1 -1)
-                              (s-split (rx (*? space) "/" (*? space)) it)
-                              (seq-random-elt it)))))
+        (subbed (lambda (s) (save-match-data
+                         (thread-first s
+                                       (substring 1 -1)
+                                       (string-split (rx "/") t (rx space))
+                                       (seq-random-elt))))))
+    (replace-regexp-in-string regexp subbed str nil nil 0)))
+
+(defun rpgtk-tables--choose-string-from-table (str)
+  "Replace <<table-name>> sequences in STR with call to `rpgdm-tables-choose'."
+  (let ((regexp (rx "<<" (group (+? any)) ">>"))
+        (subbed (lambda (s) (thread-first s
+                                     (substring 2 -2)
+                                     (rpgtk-tables-choose-str)))))
     (replace-regexp-in-string regexp subbed str)))
 
 
@@ -493,7 +506,7 @@ Uses helper function, `rpgtk-tables--find-tag'."
          (results (rpgtk-tables-dice--choose roll rows)))
     (if (stringp results)
         results
-        (seq-random-elt results))))
+      (seq-random-elt results))))
 
 ;; If the results are not a single string item, we assume we have a
 ;; list sequence, and return one at random using `seq-random-elt'.

@@ -197,6 +197,38 @@ Which could return:
 #+begin_example
 A group of 5 sleeping goblins
 #+end_example
+
+Text that matches a pattern between double angle brackets are replaced by a recursive call to another table. For instance, you could have a table of monsters in =monsters.txt=:
+#+begin_example
+  - ogres
+  - goblins
+  - trolls
+  - orcs
+  ...
+#+end_example
+And another table, =monster-activity.txt= that has stuff like:
+#+begin_example
+  - sleeping
+  - playing [dice/cards/stones]
+  - drinking
+  - arguing
+  ...
+#+end_example
+And now, in your =random-dungeon-encounters.txt= table, you can have:
+#+begin_example
+  ...
+  - mannacles attached to the wall
+  - 2d4+1 <<monsters>> <<monster-activity>>
+  ...
+#+end_example
+And now, you might get a response, like:
+#+begin_example
+  3 goblins playing cards
+#+end_example
+This feature can also be used instead of rolling on multiple tables. For instance, you could have an =npc= table that has a single entry, like:
+#+begin_example
+  - <<npc/name>>, who appears to be a <<npc/occupation>> is <<npc/activity>> ...
+#+end_example
 ** Dice Tables
 A /dice table/ is a table that is easy to manipulate with dice, and is
 pretty typical in published supplements. The general idea is to roll
