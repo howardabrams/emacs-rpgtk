@@ -32,7 +32,11 @@ And read in a same way, using =rpgtk-org-read-property=:
 However, properties can be set with symbols, too:
 #+begin_src emacs-lisp
   (rpgtk-org-create-property 'intelligence 8)
+  (rpgtk-org-read-property 'intelligence)
 #+end_src
+
+#+RESULTS:
+: 8
 
 Note that we can mix and match, so the following works:
 
@@ -47,7 +51,6 @@ Note that we can mix and match, so the following works:
 Notice that while our property is /charisma/, in the property drawer associated with this section, our property is =rpg-charisma=.
 
 Each of these properties accepts a /prefix/ allowing you to namespace it for your particular game rules. If it isnâ€™t specified, it defaults to =rpgtk-org-default-property-prefix=, which starts out as =rpg= (but is designed for you to change it).
-
 ** Functions for Adjusting Properties
 :PROPERTIES:
 :headers-args:emacs-lisp: :results none
@@ -97,3 +100,69 @@ While we could call =-delete-property= to remove the property, we probably donâ€
 #+end_src
 
 In other words, creating a new /sibling/ section heading effectively moves the property out of scope.
+
+** Complex Properties
+:PROPERTIES:
+:RPG-FAMILIAR: "An owl named Freddy"
+:RPG-FAMILIAR-TYPE: :owl
+:RPG-FAMILIAR-ANIMAL: :owl
+:RPG-FAMILIAR-DETAILS: owl "Freddy the Flapper"
+:RPG-MY-FAMILIAR: :name Freddy :hit-points 12 :type owl
+:END:
+A property can be more than a single numeric value. We can store strings:
+#+begin_src emacs-lisp
+  (rpgtk-org-set-property 'familiar "An owl named Freddy")
+  (rpgtk-org-read-property 'familiar)
+#+end_src
+
+#+RESULTS:
+: An owl named Freddy
+
+Symbols are stored in the org property with colon-prefixes, but in Emacs Lisp, they are simple quoted symbols, as in:
+#+begin_src emacs-lisp
+  (rpgtk-org-set-property 'familiar-type 'owl)
+  (eq 'owl (rpgtk-org-read-property 'familiar-type))
+#+end_src
+
+#+RESULTS:
+: t
+
+Note that if you do use keywords for a value, they will be converted when read to a quoted symbol:
+#+begin_src emacs-lisp
+  (rpgtk-org-set-property 'familiar-animal :owl)
+  (eq 'owl (rpgtk-org-read-property 'familiar-animal))
+#+end_src
+
+#+RESULTS:
+: t
+
+We can also store lists, for instance:
+#+begin_src emacs-lisp
+  (rpgtk-org-set-property 'familiar-details
+                             '("owl" "Freddy the Flapper"))
+  (car (rpgtk-org-read-property 'familiar-details))
+#+end_src
+
+#+RESULTS:
+: owl
+
+But typically, we would make a =plist= for complex objects:
+#+begin_src emacs-lisp
+  (rpgtk-org-set-property 'my-familiar
+     '(name "Freddy" hit-points 12 type "owl"))
+  (plist-get (rpgtk-org-read-property 'my-familiar) 'hit-points)
+#+end_src
+
+#+RESULTS:
+: 12
+
+We should mention that the difference between =-create-property= and =-set-property=, is that the create property always puts the property at the top-level header, where the set property places it on the /current header/.
+
+Why does this matter? Well, consider the following header order:
+
+    * Top-level, where hit-points is 42
+        + Sub-level, where =hit-points= is set to 16, and =companions= is 3
+            - Lower level, where reading =hit-points= returns 16, and reading =companions= is 3.
+        + Sibling level, where reading =hit-points= returns 42, and reading =companions= is =nil=.
+
+So, use =-set-property= for temporary stuff that should /go away/ automatically with a new header, and use =-create-property= for most settings.

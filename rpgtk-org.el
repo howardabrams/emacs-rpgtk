@@ -136,13 +136,13 @@ Note that if you want to have a string with space, surround the
 string with single or double quotes."
   (unless (or (null str) (string-empty-p str))
     (let* ((dquoted? (rx bos "\""
-                        (group (1+ (not "\"")))
-                        "\""
-                        (zero-or-more space)))
+                         (group (1+ (not "\"")))
+                         "\""
+                         (zero-or-more space)))
            (squoted? (rx bos "'"
-                        (group (1+ (not "'")))
-                        "'"
-                        (zero-or-more space)))
+                         (group (1+ (not "'")))
+                         "'"
+                         (zero-or-more space)))
            (number? (rx bos
                         (group (1+ digit))
                         (zero-or-more space)))
@@ -169,12 +169,12 @@ string with single or double quotes."
   "If VALUE, a string, can be a number, return VALUE as number.
 If VALUE looks like a list of items, return VALUE as list.
 Otherwise, return VALUE as a string."
-  (cond
-   ((string-match (rx bos (one-or-more digit) eos) value)
-    (string-to-number value))
-   ((string-match (rx space) value)
-    (rpgtk-org--string-to-list value))
-   (t value)))
+  (if (string-match (rx bos (one-or-more digit) eos) value)
+      (string-to-number value)
+    (let ((l (rpgtk-org--string-to-list value)))
+      (if (= 1 (seq-length l))
+          (car l)
+        l))))
 
 (defun rpgtk-org--property-value-string (value)
   "Return VALUE as a string suitable for Org properties."
@@ -182,8 +182,11 @@ Otherwise, return VALUE as a string."
                          (cond
                           ((and (stringp v) (string-match-p (rx "\"") v))
                            (format "'%s'" v))
-                          ((stringp v) (format "\"%s\"" v))
+                          ((and (stringp v) (string-match-p (rx space) v))
+                           (format "\"%s\"" v))
+                          ((stringp v) (format "%s" v))
                           ((numberp v) (number-to-string v))
+                          ((keywordp v) (symbol-name :owl))
                           ((symbolp v) (format ":%s" (symbol-name v)))))))
     (if (listp value)
         (string-join (seq-map convert-value value) " ")
@@ -191,20 +194,14 @@ Otherwise, return VALUE as a string."
 
 ;; --------------------
 
-(defun rpgtk-org--read-property (prop-key)
-  "Helper function for `rpgtk-org-read-property'.
-Read current header properties for PROP-KEY, and return
-the value of that property."
-  (let ((props (org-element--get-node-properties)))
-    (when-let ((value (plist-get props prop-key 'equal)))
-      (rpgtk-org--property-value value))))
-
 (defun rpgtk-org-read-property (prop &optional prefix)
   "Return first occurrence of property, PROP in org buffer.
 Note that PROP (or PREFIX) can be a string or symbol.
 If PREFIX is specified, pre-pend it to PROP, otherwise, pre-pend
 value of `rpgtk-org-default-property-prefix'."
-  (let ((key (rpgtk-org--property-key prefix prop))
+  (let ((key (if prefix
+                 (rpgtk-org--property-key prefix prop)
+               (rpgtk-org--property-key rpgtk-org-default-property-prefix prop)))
         (results nil))
     (save-excursion
       (unless (org-at-heading-p)
@@ -215,6 +212,13 @@ value of `rpgtk-org-default-property-prefix'."
         (unless results (org-up-heading)))
       results)))
 
+(defun rpgtk-org--read-property (prop-key)
+  "Helper function for `rpgtk-org-read-property'.
+Read current header properties for PROP-KEY, and return
+the value of that property."
+  (let ((props (org-element--get-node-properties)))
+    (when-let ((value (plist-get props prop-key 'equal)))
+      (rpgtk-org--property-value value))))
 
 (defun rpgtk-org-create-property (prop value &optional prefix)
   "Set PROP as a Org Property at the first heading level in document.
@@ -269,8 +273,8 @@ a new value (after being converted to a string with
 
 Otherwise, ADJUSTMENT is used as the new value, replacing CURR-VALUE."
   (let ((prop-str (thread-first prop
-                               (symbol-name)
-                               (substring 1))))
+                                (symbol-name)
+                                (substring 1))))
     (cond
      ((null adjustment)
       (org-delete-property prop-str))

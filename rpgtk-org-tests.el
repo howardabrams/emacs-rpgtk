@@ -38,9 +38,20 @@
   (should (eq :RPG-BAR (rpgtk-org--property-key nil "bar"))))
 
 (ert-deftest rpgtk-org--property-value-test ()
+  ;; If it looks like a number, it is a number:
   (should (= 42 (rpgtk-org--property-value "42")))
+  ;; If it looks like a string, as a single word, it is a string:
+  (should (equal "foobar" (rpgtk-org--property-value "foobar")))
+  ;; Strings with a space need to be quoted:
+  (should (equal "foo bar" (rpgtk-org--property-value "\"foo bar\"")))
+  (should (equal "foo bar" (rpgtk-org--property-value "'foo bar'")))
+  ;; Multiple strings should be in a list:
   (should (equal '("foo" "bar") (rpgtk-org--property-value "foo bar")))
-  (should (equal "foobar" (rpgtk-org--property-value "foobar"))))
+  ;; Works with a colon are a symbol:
+  (should (equal 'foo (rpgtk-org--property-value ":foo")))
+  ;; Let's make a somplex list:
+  (should (equal '(foo 42 bar "very nice")
+                 (rpgtk-org--property-value ":foo 42 :bar 'very nice'"))))
 
 (ert-deftest rpgtk-org--string-to-list-test ()
   (should (null (rpgtk-org--string-to-list nil)))
@@ -77,18 +88,18 @@
   (flet ((org-at-heading-p ()  t)
          (org-up-heading () t)
          (org-heading-level () 1)
-         (org-element--get-node-properties
-          ()
+         (org-element--get-node-properties (&optional at-point-p)
           (list :RPG-FOOBAR "42"
                 :RPG-FOOLIST "one :two \"buckle my shoe\" 3 :four"
                 :IGNORED "this is ignored")))
     (should (= 42 (rpgtk-org-read-property 'foobar 'rpg)))
     (should (= 42 (rpgtk-org-read-property "foobar" "rpg")))
+    (should (= 42 (rpgtk-org-read-property 'foobar)))
     (should (= 42 (rpgtk-org-read-property "foobar")))))
 
 (ert-deftest rpgtk-org--property-value-string-test ()
   (should (equal "42" (rpgtk-org--property-value-string 42)))
-  (should (equal "\"foobar\"" (rpgtk-org--property-value-string "foobar")))
+  (should (equal "foobar" (rpgtk-org--property-value-string "foobar")))
   (should (equal "'Dwayne \"The Rock\" Johnson'"
                  (rpgtk-org--property-value-string "Dwayne \"The Rock\" Johnson")))
   (should (equal ":foobar" (rpgtk-org--property-value-string 'foobar)))
@@ -100,5 +111,6 @@
   (let ((v '(strength 19 "very strong")))
     (should (equal v (rpgtk-org--property-value
                       (rpgtk-org--property-value-string v))))))
+
 (provide 'rpgtk-org-tests)
 ;;; rpgtk-org-tests.el ends here
