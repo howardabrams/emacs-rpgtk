@@ -343,6 +343,122 @@ PREFIX, if set, is pre-pended to PROPERTY, and if not set,
         (org-up-heading))
       (rpgtk-org--update-property key nil nil))))
 
+;; ------------------------------------------------------------
+;;  Collections are properties that are treated as a "group".
+
+(defun rpgtk-org-read-collection (prop &optional prefix)
+  "Read a list of properties that match PREFIX and PROP."
+  (let ((key (if prefix
+                 (rpgtk-org--property-key prefix prop)
+               (rpgtk-org--property-key rpgtk-org-default-property-prefix prop))))
+    (rpgtk-org-read-properties (rx bol (literal (format "%s" key))) nil)))
+
+;; ------------------------------------
+
+(defun rpgtk-org-property-id ()
+  "Generate and return a unique, but short ID."
+  (substring (sha1 (format-time-string "%y%m%d%H%M%S")) 0 6))
+
+(defun rpgtk-org-add-collection (prop value &optional prefix)
+  "Adds a property collection, PROP (with optional PREFIX).
+The VALUE can be a string, number or a list.
+See `rpgtk-org-set-property' for details."
+  (rpgtk-org-set-property (format "%s-%s" prop (rpgtk-org-property-id))
+                          value prefix))
+
+(defun rpgtk-org-get-collection (prop &optional prefix)
+  "Return a list of all properties that match property, PROP.
+The PREFIX, if not given, defaults to 'rpg'."
+  (let ((property (rpgtk-org--property-key-string prefix prop)))
+    (rpgtk-org-read-properties (rx string-start (literal property)))))
+
+(defun rpgtk-org-get-collection-keys (key prop &optional prefix)
+  "Return list of keys, KEY, of properties matching PROP.
+The PREFIX, if not given, defaults to 'rpg'. For instance, if the
+org document contained the following matching properties:
+
+    :RPG-ITEM-78C4D8: :name bedroll :weight 2
+    :RPG-ITEM-52847E: :name dagger :weight 1
+    :RPG-ITEM-E74DDA: :name \"component pouch\" :weight 2
+
+Then setting KEY to 'name' (and PROP to 'item'), would return the
+list:
+
+    (\"bedroll\" \"dagger\" \"component pouch\")"
+  (seq-map (lambda (item) (plist-get item key))
+           (rpgtk-org-get-collection prop prefix)))
+
+(defun rpgtk-org-get-collection-names (prop &optional prefix)
+  "Return a list of names of properties matching PROP.
+The PREFIX, if not given, defaults to 'rpg'. See the doc string
+for `rpgtk-org-get-collection-keys' for details."
+  (rpgtk-org-get-collection-keys 'name prop prefix))
+
+(defun rpgtk-org-get-collection-item (key value prop &optional prefix)
+  "Return first available org property of collection PROP.
+Filter the list to one of a symbol, KEY that matches VALUE."
+  (let ((props (rpgtk-org-get-collection prop prefix)))
+    (first
+     (seq-filter (lambda (item)
+                   (equal value (plist-get item key)))
+                 props))))
+
+(defun rpgtk-org-get-collection-item-by-name (name prop &optional prefix)
+  "Return org property matching PROP (with PREFIX defaulting to 'rpg').
+Filter to first match with a `plist' of `name' matching NAME.
+
+For instance, if the org document contained the following
+matching properties:
+
+    :RPG-ITEM-78C4D8: :name bedroll :weight 2
+    :RPG-ITEM-52847E: :name dagger :weight 1
+    :RPG-ITEM-E74DDA: :name \"component pouch\" :weight 2
+
+Calling this function with NAME set to \"dagger\" (and PROP to
+\"item\"), would return the list:
+
+    '(name \"dagger\" weight 1)"
+  (rpgtk-org-get-collection-item 'name name prop prefix))
+
+(defun rpgtk-org-read-properties (property-pattern &optional include-key?)
+  "Return all properties matching PROPERTY-PATTERN.
+Similar to `rpgtk-org-read-property', but returns a list of all
+matching properties. If INCLUDE-KEY? is non-nil, return both
+property and value of the property otherwise, this just returns a
+list of matching values."
+  (save-excursion
+    (unless (org-at-heading-p)
+      (org-up-heading))
+
+    ;; Search and collect matching properties, and keep doing that as
+    ;; long as `org-up-heading' returns non-nil ... in other words,
+    ;; it can still go up a level:
+    (let (results)
+      (loop-do-while (org-up-heading)
+        (setq results
+              (append (rpgtk-org--read-properties property-pattern include-key?)
+                      results)))
+      results)))
+
+(defun rpgtk-org--read-properties (prop-pattern &optional include-key?)
+  "Recursive helper function for `rpgtk-org-read-properties'.
+Where PROP-PATTERN is a regular expression to filter property symbols.
+If INCLUDE-KEY? is non-nil, return both property and value of the property
+otherwise, this just returns a list of matching values."
+  (let ((match? (lambda (pair)
+                  (when (string-match prop-pattern
+                                      ;; Convert symbol to matching string:
+                                      (thread-first pair
+                                              (first)
+                                              (symbol-name)
+                                              (substring 1)))
+                    (if include-key?
+                        pair
+                      (rpgtk-org--property-value (second pair))))))
+        (props (seq-split (org-element--get-node-properties) 2)))
+    (thread-last props
+                 (seq-map match?)
+                 (seq-remove 'null))))
 
 (provide 'rpgtk-org)
 ;;; rpgtk-org.el ends here

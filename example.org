@@ -166,3 +166,75 @@ Why does this matter? Well, consider the following header order:
         + Sibling level, where reading =hit-points= returns 42, and reading =companions= is =nil=.
 
 So, use =-set-property= for temporary stuff that should /go away/ automatically with a new header, and use =-create-property= for most settings.
+** Property Collections
+:PROPERTIES:
+:RPG-ITEM-78C4D8: :name bedroll :weight 2
+:RPG-ITEM-480E59: :name "chain, 10'" :weight 10
+:RPG-ITEM-52847E: :name dagger :weight 1
+:RPG-ITEM-E74DDA: :name "component pouch" :weight 2
+:END:
+Often we need to store lists of complex objects. For instance, we can store equipment with details about how much they weigh:
+#+begin_src emacs-lisp
+  (rpgtk-org-add-collection 'item '(name "bedroll" weight 2))
+  (rpgtk-org-add-collection 'item '(name "chain, 10'" weight 10))
+  (rpgtk-org-add-collection 'item '(name "dagger" weight 1))
+  (rpgtk-org-add-collection 'item '(name "component pouch" weight 2))
+#+end_src
+
+Each item has a separate property (as we want this to be user editable), and to make each item unique, they have a small ID:
+#+begin_example
+:PROPERTIES:
+:RPG-ITEM-78C4D8: :name bedroll :weight 2
+:RPG-ITEM-480E59: :name "chain, 10'" :weight 10
+:RPG-ITEM-52847E: :name dagger :weight 1
+:RPG-ITEM-E74DDA: :name "component pouch" :weight 2
+:END:
+#+end_example
+
+The ID values are not usable, but it allows us to keep the properties unique. Reading a collection gives a list:
+#+begin_src emacs-lisp :results code :wrap src emacs-lisp
+  (rpgtk-org-get-collection 'item)
+#+end_src
+
+#+RESULTS:
+#+begin_src emacs-lisp
+((name "bedroll" weight 2) (name "chain, 10'" weight 10)
+ (name "dagger" weight 1) (name "component pouch" weight 2))
+#+end_src
+
+If you make a collection a series of =plist= entries and one entry uses the symbol =name=, you might want to get a list of those names. For instance:
+#+begin_src emacs-lisp :results list
+  (rpgtk-org-get-collection-names "item")
+#+end_src
+
+Would return the list containing:
+- bedroll
+- chain, 10'
+- dagger
+- component pouch
+
+Why would this be helpful? You could allow the player to select an entry from the collection for =completing-read=.  For instance:
+#+begin_src emacs-lisp
+  (defun grab-item (item)
+    (interactive
+     (list
+      (completing-read "Which item? "
+                       (rpgtk-org-get-collection-names "item"))))
+     ;; => `item' could be the string: "component pouch"
+     ...)
+#+end_src
+
+However, you probably don’t need the /name/ only, but the entire entry. The function =rpgtk-org-get-collection-item-by-name= returns the entire property. Now, our function would start:
+
+#+begin_src emacs-lisp
+  (defun grab-item (item)
+    (interactive
+     (list
+      (rpgtk-org-get-collection-item-by-name
+       (completing-read "Which item? "
+                        (rpgtk-org-get-collection-name "item"))
+       "item")))
+    ;; => `item'' could be the list:
+    ;;      (name "component pouch" weight 2)
+    ...)
+#+end_src
