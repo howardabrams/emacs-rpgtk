@@ -169,6 +169,7 @@ See `rpgtk-dice-roll-mod' for DSL details implemented here."
                    (cl-case modifier
                      (:add    (append dice-pool parameters))
                      (:sum    (list (apply '+ dice-pool)))
+                     (:count  (list (length dice-pool)))
                      (:max    (list (apply 'max dice-pool)))
                      (:min    (list (apply 'min dice-pool)))
                      (:top    (seq-take (seq-sort '> dice-pool)
@@ -208,6 +209,7 @@ Modifiers include:
 
     * :add    appends one or more numbers to the dice pool
     * :sum    adds all numbers in dice pool
+    * :count  return number of dice in pool
     * :max    returns the highest number is pool
     * :min    returns the lowest number
     * :top    returns the highest number(s) based on parameter
@@ -554,6 +556,18 @@ Each die ranges fro -1 to 1."
                   (rpgtk-dice-roll-mod :sum)
                   (rpgtk-dice-format-roll "4dF" nil nil 4 -4)
                   (rpgtk-message))))
+
+(defun rpgtk-dice-roll-yearend (num-dice)
+  "Displays a formatted dice expression for Year End rolls.
+Where NUM-DICE are the number six-sided dice to roll.
+The results are the number of 6's rolled."
+  (interactive "nNumber of Dice: ")
+  (rpgtk-message  (thread-first num-dice
+                          (rpgtk-dice-roll 6)
+                          (rpgtk-dice-roll-mod
+                           :filter (lambda (d) (>= d 6))
+                           :count)
+                          (rpgtk-dice-format-roll nil 1))))
 
 (provide 'rpgtk-dice)
 ;;; rpgtk-dice.el ends here

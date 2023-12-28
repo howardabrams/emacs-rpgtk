@@ -4,6 +4,8 @@
 #+date:   2023-10-01 October
 #+tags:   emacs rpg solottrpg
 
+(See the README at https://codeberg.org/howardabrams/emacs-rpgtk)
+
 This project supplies a collection of functions in Emacs Lisp to allow
 developers to craft RPG-inspired programs, with a focus on Solo RPGs
 played in Org-formatted files.
@@ -78,8 +80,8 @@ could make a complete function to simulate this dice mechanic:
 #+end_src
 
 If the highest roll was a 6, the function shows it in a green color
-(actually based on the [[file:rpgtk-dice.el::(defface rpgtk-successful-roll][rpgtk-successful-roll]] face), and for a /partial
-success/, we use the [[file:rpgtk-dice.el::(defface rpgtk-middlin-roll][rpgtk-middlin-roll]] face:
+(actually based on the [[file:rpgtk-dice.el::(defface rpgtk-successful-roll][rpgtk-successful-roll]] face), and for a
+/partial success/, we use the [[file:rpgtk-dice.el::(defface rpgtk-middlin-roll][rpgtk-middlin-roll]] face:
 
 [[file:images/screenshot-rpgtk-roll-bitd1.png]]
 
