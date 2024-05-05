@@ -36,8 +36,8 @@
 (require 'cl)
 (require 'subr-x)
 
-(require 'rpgtk-dice (expand-file-name "rpgtk-dice.el" (file-name-directory (buffer-file-name))))
-(require 'rpgtk-messages (expand-file-name "rpgtk-messages.el" (file-name-directory (buffer-file-name))))
+(require 'rpgtk-dice)
+(require 'rpgtk-messages)
 
 (defcustom rpgtk-tables-directory
   (expand-file-name "tables" (file-name-directory (buffer-file-name)))
@@ -520,13 +520,14 @@ This assumes ROWS is a sorted list where the first element (the
 `car') is a numeric level that if ROLL is less than or equal, we
 return the `rest' of the row. Otherwise, we recursively call this
 function with the `rest' of the rows."
-  (let* ((row (car rows))
-         (level (car row))
-         (answer (cdr row)))
+  (when rows
+      (let* ((row (car rows))
+             (level (car row))
+             (answer (cdr row)))
 
-    (if (<= roll level)
-        answer
-      (rpgtk-tables-dice--choose roll (cdr rows)))))
+        (if (<= roll level)
+            answer
+          (rpgtk-tables-dice--choose roll (cdr rows))))))
 
 ;; So, let's see it in action, by first assigning the dice-table
 ;; above, to a variable: `alignment-table':

@@ -31,7 +31,7 @@
 ;;
 ;;; Code:
 
-(require 'rpgtk-messages (expand-file-name "rpgtk-messages.el" (file-name-directory (buffer-file-name))))
+(require 'rpgtk-messages)
 
 (defvar rpgtk-dice-previous-roll-expression nil
   "Store last dice expression, aa a string.
@@ -432,6 +432,73 @@ if we need too."
 ;;  SOME GAME-SPECIFIC DICE ROUTINES
 ;; -------------------------------------------------------------------
 
+(defun rpgtk-dice-roll-poly (sides)
+  "Return value from rolling a polyhedral die of SIDES."
+  (interactive "nNumber of Polyhedral Die: ")
+  (thread-first (rpgtk-dice-roll 1 sides)
+                (rpgtk-dice-roll-mod)
+                (rpgtk-dice-format-roll (format "d%d" sides))
+                (rpgtk-message)))
+
+(defun rpgtk-dice-roll-d3 ()
+  "Return results from rolling a 3-sided die."
+  (interactive)
+  (rpgtk-dice-roll-poly 3))
+
+(defun rpgtk-dice-roll-d4 ()
+  "Return results from rolling a 4-sided die."
+  (interactive)
+  (rpgtk-dice-roll-poly 4))
+
+(defun rpgtk-dice-roll-d6 ()
+  "Return results from rolling a 6-sided die."
+  (interactive)
+  (rpgtk-dice-roll-poly 6))
+
+(defun rpgtk-dice-roll-d8 ()
+  "Return results from rolling a 8-sided die."
+  (interactive)
+  (rpgtk-dice-roll-poly 8))
+
+(defun rpgtk-dice-roll-d10 ()
+  "Return results from rolling a 10-sided die."
+  (interactive)
+  (rpgtk-dice-roll-poly 10))
+
+(defun rpgtk-dice-roll-d12 ()
+  "Return results from rolling a 12-sided die."
+  (interactive)
+  (rpgtk-dice-roll-poly 12))
+
+(defun rpgtk-dice-roll-d20 ()
+  "Return results from rolling a 20-sided die."
+  (interactive)
+  (thread-first (rpgtk-dice-roll 1 20)
+                (rpgtk-dice-roll-mod)
+                (rpgtk-dice-format-roll "d20" nil nil 20 1)
+                (rpgtk-message)))
+
+(defun rpgtk-dice-roll-d100 ()
+  "Return results from rolling a 100-sided die."
+  (interactive)
+  (rpgtk-dice-roll-poly 100))
+
+(defun rpgtk-dice-roll-2d6 ()
+  "Return results from rolling two 6-sided dice."
+  (interactive)
+  (thread-first (rpgtk-dice-roll 2 6)
+                (rpgtk-dice-roll-mod :sum)
+                (rpgtk-dice-format-roll "2d6")
+                (rpgtk-message)))
+
+(defun rpgtk-dice-roll-3d6 ()
+  "Return results from rolling three 6-sided dice."
+  (interactive)
+  (thread-first (rpgtk-dice-roll 3 6)
+                (rpgtk-dice-roll-mod :sum)
+                (rpgtk-dice-format-roll "3d6")
+                (rpgtk-message)))
+
 (defun rpgtk-dice-roll-dnd (num-dice dice-type modifier)
   "Return a dice sequence that simulates a D&D-style roll.
 Given a dice expression of 3d8+2, this function would be called
@@ -447,30 +514,46 @@ and MODIFIER is the value to add/subtract to the sum, e.g. 2."
   "Return a dice sequence of two d20s, and the highest is kept.
 Note that MODIFIER is added to the results."
   (interactive "nRoll d20 modifier: ")
-  (let ((rolls (rpgtk-dice-roll-mod (rpgtk-dice-roll 2 20)
-                                    :max
-                                    :add (or modifier 0)
-                                    :sum)))
-    (rpgtk-message
-     (rpgtk-dice-format-roll rolls nil nil nil 20 1))))
+  (thread-first (rpgtk-dice-roll 2 20)
+                (rpgtk-dice-roll-mod
+                 :max
+                 :add (or modifier 0)
+                 :sum)
+                (rpgtk-dice-format-roll "d20/a")
+                (rpgtk-message)))
 
 (defun rpgtk-dice-roll-dnd-disadvantage (&optional modifier)
   "Return a dice sequence of two d20s, and the lowest is kept.
 Note that MODIFIER is added to the results."
   (interactive "nRoll d20 modifier: ")
-  (rpgtk-dice-roll-mod (rpgtk-dice-roll 2 20)
-                       :min
-                       :add (or modifier 0)
-                       :sum))
+  (thread-first (rpgtk-dice-roll 2 20)
+                (rpgtk-dice-roll-mod
+                 :min
+                 :add (or modifier 0)
+                 :sum)
+                (rpgtk-dice-format-roll "d20/d")
+                (rpgtk-message)))
 
 (defun rpgtk-dice-roll-bitd (num-dice)
   "Displays a formatted dice expression for Blades in the Dark.
 Where NUM-DICE are the number six-sided dice to roll."
   (interactive "nNumber of Dice: ")
-  (rpgtk-message  (thread-first num-dice
-                          (rpgtk-dice-roll 6)
-                          (rpgtk-dice-roll-mod :max)
-                          (rpgtk-dice-format-roll nil 6 4))))
+  (thread-first num-dice
+                (rpgtk-dice-roll 6)
+                (rpgtk-dice-roll-mod :max)
+                (rpgtk-dice-format-roll "BitD" 6 4)
+                (rpgtk-message)))
+
+(defun rpgtk-dice-roll-fate ()
+  "Displays a formatted dice expression for four Fate Dice.
+Each die ranges fro -1 to 1."
+  (interactive)
+  (let ((die-rolls (seq-map (lambda (_) (1- (random 3)))
+                            '(0 0 0 0))))
+    (thread-first die-rolls
+                  (rpgtk-dice-roll-mod :sum)
+                  (rpgtk-dice-format-roll "4dF" nil nil 4 -4)
+                  (rpgtk-message))))
 
 (provide 'rpgtk-dice)
 ;;; rpgtk-dice.el ends here

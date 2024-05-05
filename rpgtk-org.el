@@ -199,9 +199,9 @@ Otherwise, return VALUE as a string."
 Note that PROP (or PREFIX) can be a string or symbol.
 If PREFIX is specified, pre-pend it to PROP, otherwise, pre-pend
 value of `rpgtk-org-default-property-prefix'."
-  (let ((key (if prefix
-                 (rpgtk-org--property-key prefix prop)
-               (rpgtk-org--property-key rpgtk-org-default-property-prefix prop)))
+  (let ((key (rpgtk-org--property-key
+              (or prefix rptk-org-default-property-prefix)
+              prop))
         (results nil))
     (save-excursion
       (unless (org-at-heading-p)
@@ -360,7 +360,7 @@ PREFIX, if set, is pre-pended to PROPERTY, and if not set,
   (substring (sha1 (format-time-string "%y%m%d%H%M%S")) 0 6))
 
 (defun rpgtk-org-add-collection (prop value &optional prefix)
-  "Adds a property collection, PROP (with optional PREFIX).
+  "Add a property collection, PROP (with optional PREFIX).
 The VALUE can be a string, number or a list.
 See `rpgtk-org-set-property' for details."
   (rpgtk-org-set-property (format "%s-%s" prop (rpgtk-org-property-id))
