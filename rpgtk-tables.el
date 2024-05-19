@@ -40,8 +40,10 @@
 (require 'rpgtk-messages)
 
 (defcustom rpgtk-tables-directory
-  (expand-file-name "tables" (file-name-directory (buffer-file-name)))
-  "Directory path containing the tables to load and create functions."
+  (when-let ((lib (seq-find (lambda (f) (string-match (rx "rpgtk" eol) f)) load-path)))
+    (expand-file-name "tables" lib))
+  "Default directory path of tables to load.
+This can be set to nil. See `rpgtk-init' for loading additional tables."
   :group 'rpgtk
   :type '(directory))
 
@@ -56,9 +58,12 @@ when calling `rpgtk-tables-choose'."
                                           rpgtk-tables-directory)))
   (unless filepath
     (setq filepath rpgtk-tables-directory))
-  (rpgtk-tables--load-dir filepath)
-  (message "Read: %s"
-           (mapconcat 'identity (hash-table-keys rpgtk-tables) ", ")))
+
+  ;; No filepath and no default tables-directory? Bail out:
+  (when filepath
+    (rpgtk-tables--load-dir filepath)
+    (message "Read: %s"
+             (mapconcat 'identity (hash-table-keys rpgtk-tables) ", "))))
 
 (defun rpgtk-tables--load-dir (filepath &optional prefix)
   "Read and parse the files in the directory given by FILEPATH.
@@ -521,13 +526,13 @@ This assumes ROWS is a sorted list where the first element (the
 return the `rest' of the row. Otherwise, we recursively call this
 function with the `rest' of the rows."
   (when rows
-      (let* ((row (car rows))
-             (level (car row))
-             (answer (cdr row)))
+    (let* ((row (car rows))
+           (level (car row))
+           (answer (cdr row)))
 
-        (if (<= roll level)
-            answer
-          (rpgtk-tables-dice--choose roll (cdr rows))))))
+      (if (<= roll level)
+          answer
+        (rpgtk-tables-dice--choose roll (cdr rows))))))
 
 ;; So, let's see it in action, by first assigning the dice-table
 ;; above, to a variable: `alignment-table':
@@ -593,5 +598,6 @@ function with the `rest' of the rows."
     (make-rpgtk-tables-dice-obj
      :dice dice
      :rows (sort rows (lambda (a b) (< (first a) (first b)))))))
+
 (provide 'rpgtk-tables)
 ;;; rpgtk-tables.el ends here

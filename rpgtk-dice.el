@@ -31,6 +31,7 @@
 ;;
 ;;; Code:
 
+(require 'subr-x)
 (require 'rpgtk-messages)
 
 (defvar rpgtk-dice-previous-roll-expression nil
@@ -225,9 +226,9 @@ Modifiers include:
 Where DICE-SEQUENCE is a list of numeric lists, e.g.
 `((1 8 3 4) (8 4) (12))' would return 12."
   (thread-first dice-sequence
-                flatten-list
-                last
-                car))
+                (flatten-list)
+                (last)
+                (car)))
 
 ;; ------------------------------------------------------------
 ;; DICE EXPRESSION- Strings like 2d6+1 could be split into integer

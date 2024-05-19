@@ -59,6 +59,8 @@
 (defgroup rpgtk nil
   "Customization for the Role Playing Game Toolkit.")
 
+(defvar rpgtk-messages-show nil)
+
 (defvar rpgtk-last-results nil
   "The results from calls to `rpgtk-screen-' functions are stored here.")
 
@@ -124,32 +126,6 @@ Meant to be used with `rpgtk-last-results-previous'."
   (when (> rpgtk-last-results-ptr 0)
     (cl-decf rpgtk-last-results-ptr))
   (rpgtk-last-results t))
-
-(if (not (fboundp 'defhydra))
-    (defun rpgtk-last-message ()
-      "Display the last RPG Toolkit message."
-      (interactive)
-      (rpgtk-last-results))
-
-  (if (fboundp 'evil-mode)
-      (defhydra rpgtk-messages-show (:color pink :hint nil)
-        ("k" rpgtk-last-results-previous "previous message")
-        ("j" rpgtk-last-results-next "next message")
-        ("p" yank "paste message")
-        ("q" nil "quit"))
-
-    (defhydra rpgtk-messages-show (:color pink :hint nil)
-      ("p" rpgtk-last-results-previous "previous message")
-      ("n" rpgtk-last-results-next "next message")
-      ("y" yank "yank message")
-      ("q" nil "quit")))
-
-  (defun rpgtk-last-message ()
-    "Display the last RPG Toolkit message.
-  Present a hydra allowing user to see previous messages."
-    (interactive)
-    (rpgtk-last-results)
-    (rpgtk-messages-show/body)))
 
 (provide 'rpgtk-messages)
 ;;; rpgtk-messages.el ends here

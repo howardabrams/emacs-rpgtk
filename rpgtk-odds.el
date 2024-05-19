@@ -165,7 +165,7 @@ CHAOS-LEVEL."
      ;; 0% to the given likelihood level:
      (t (- likelihood (* chaos-magnitude (/ likelihood chaos-limit)))))))
 
-(defun rpgtk-odds-odds-markers (likelihood)
+(defun rpgtk-odds-markers (likelihood)
   "Return a list of yes, and limit values from LIKELIHOOD.
 
 The LIKELIHOOD should be between 10 and 90 representing
@@ -177,13 +177,13 @@ Where the higher the value, the greater the ‘yes’ chance."
     (setq likelihood (* 10 likelihood)))
 
   (list
-   (* likelihood yes-high-mark)
-   (- likelihood (* likelihood yes-low-mark))
+   (* likelihood rpgtk-odds-yes-high-mark)
+   (- likelihood (* likelihood rpgtk-odds-yes-low-mark))
    likelihood
-   (+ likelihood (* (- 100 likelihood) no-high-mark))
-   (- 100 (* (- 100 likelihood) no-low-mark))))
+   (+ likelihood (* (- 100 likelihood) rpgtk-odds-no-high-mark))
+   (- 100 (* (- 100 likelihood) rpgtk-odds-no-low-mark))))
 
-(defun rpgtk-odds-odds-results (roll yes-high yes-low yes-or-no no-low no-high)
+(defun rpgtk-odds-results (roll yes-high yes-low yes-or-no no-low no-high)
   "Compare ROLL with the values of the rest of the parameter.
 Return a list consisting of the `main-message', a `helper-message',
 and a proper face color to display the `main-message'.
@@ -231,28 +231,28 @@ With PREFIX, return message with more stats on the random roll."
     (error "The likelihood odds require a percentage between 10 and 90"))
    ((> likelihood 90)
     (error "The odds won't work with likelihoods above 90%"))
-   ((> chaos-level odds-of-chaos-max-level)
+   ((> chaos-level rpgtk-odds-of-chaos-max-level)
     (error "The chaos-level, %d, can't be above %d"
-           chaos-level odds-of-chaos-max-level))
-   ((< chaos-level (- odds-of-chaos-max-level))
+           chaos-level rpgtk-odds-of-chaos-max-level))
+   ((< chaos-level (- rpgtk-odds-of-chaos-max-level))
     (error "The chaos-level, %d, can't be below -%d"
-           chaos-level odds-of-chaos-max-level))
+           chaos-level rpgtk-odds-of-chaos-max-level))
    ((< likelihood 1)
     (setq likelihood (* 100 likelihood)))
    ((< likelihood 10)
     (setq likelihood (* 10 likelihood))))
 
   ;; The `seq-let' assigns each member of the list returned by
-  ;; `odds-markers' to individual variables:
+  ;; `rpgtk-odds-markers' to individual variables:
   (seq-let (yes-high yes-low yes-or-no no-low no-high)
-      (odds-markers (rpgtk-odds-likelihood-offset likelihood chaos-level))
+      (rpgtk-odds-markers (rpgtk-odds-likelihood-offset likelihood chaos-level))
 
     (let ((roll (random 100)))
 
       ;; This `seq-let' assigns differt parts of the "results table"
       ;; to variables to use to re-color text differently:
       (seq-let (main help color)
-          (odds-results roll yes-high yes-low yes-or-no no-low no-high)
+          (rpgtk-odds-results roll yes-high yes-low yes-or-no no-low no-high)
 
         ;; Giving the `C-u' prefix will display more information:
         (rpgtk-message

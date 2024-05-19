@@ -38,8 +38,8 @@
 
 (require 'cl)
 (require 'subr-x)
-(require 'hydra)
 
+;; During local development, it might be helpful to run this expression:
 ;; (add-to-list 'load-path (file-name-directory (buffer-file-name)))
 
 (require 'rpgtk-messages)
@@ -47,55 +47,17 @@
 (require 'rpgtk-tables)
 (require 'rpgtk-odds)
 
-(defhydra hydra-rpgtk (:color blue :hint nil) "
- ^Dice^                                ^Tables^                ^Messages^
-────────────────────────────────────────────────────────────────────────────────────
- _o_: Odds (What are the odds?)        _c_: Choose from Table  _m_: Last Messages
- _d_: Roll dice / _D_: Reroll Dice       _t_: Load Tables
- _a_: d20 Advantage / _A_: Disadvantage
- _b_: BitD / _B_: Fate Dice
-────────────────────────────────────────────────────────────────────────────────────
- _3_: d3  _4_: d4  _6_: d6  _8_: d8  _1_: d10  _@_: d12  _2_: d20  _0_: d100 "
-  ("o" rpgtk-odds)
-  ("c" rpgtk-tables-choose)
-  ("t" rpgtk-tables-load)
-
-  ("m" rpgtk-last-message)
-
-  ("d" rpgtk-roll)
-  ("D" rpgtk-roll-again)
-  ("M-d" rpgtk-dice-forward-roll)
-  ("a" rpgtk-dice-roll-dnd-advantage)
-  ("A" rpgtk-dice-roll-dnd-disadvantage)
-
-  ("b" rpgtk-dice-roll-bitd :color pink)
-  ("B" rpgtk-dice-roll-fate :color pink)
-  ("1" rpgtk-dice-roll-d10 :color pink)
-  ("2" rpgtk-dice-roll-d20 :color pink)
-  ("3" rpgtk-dice-roll-d3 :color pink)
-  ("4" rpgtk-dice-roll-d4 :color pink)
-  ("6" rpgtk-dice-roll-d6 :color pink)
-  ("8" rpgtk-dice-roll-d8 :color pink)
-  ("0" rpgtk-dice-roll-d100 :color pink)
-  ("@" rpgtk-dice-roll-d12 :color pink)
-
-  ;; Extra bindings:
-  ("q" nil :color blue))
-
-(define-minor-mode rpgtk-mode
-  "Minor mode for layering role-playing game master functions over your notes."
-  :lighter " D&D"
-  :keymap (let ((map (make-sparse-keymap)))
-            (define-key map (kbd "<f6>") 'hydra-rpgtk/body)
-            map))
+(when (fboundp 'defhydra)
+  (load-library "rpgtk-hydra"))
 
 (defun rpgtk-init (&optional tables)
   "Initialize the RPGTK system for current file.
 This loads files from TABLES directory."
-  (rpgtk-tables-load rpgtk-tables-directory)
+  (rpgtk-tables-load)
   (when tables
     (rpgtk-tables-load tables))
-  (rpgtk-mode))
+  (when (boundp 'rpgtk-mode)
+    (rpgtk-mode)))
 
 (provide 'rpgtk)
 ;;; rpgtk.el ends here
