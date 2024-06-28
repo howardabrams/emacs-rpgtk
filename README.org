@@ -4,8 +4,6 @@
 #+date:   2023-10-01 October
 #+tags:   emacs rpg solottrpg
 
-(See the README at https://codeberg.org/howardabrams/emacs-rpgtk)
-
 This project supplies a collection of functions in Emacs Lisp to allow
 developers to craft RPG-inspired programs, with a focus on Solo RPGs
 played in Org-formatted files.
@@ -103,6 +101,32 @@ The =rpgtk-dice-roll-mod= function call would look something like:
 
 See the function documentation for =rpgtk-dice-roll-mod= for a list of
 modifications.
+* Deck Draws
+The [[file:rpgtk-deck.el][rpgtk-deck]] contains functions for drawing cards from a deck.
+
+*Note:* A deck is simply a list of strings, but normally built from a small list of numbers (called /orders/) and /suits/. These may or may not be followed by a list of /trumps/, e.g. The Jokers in a standard deck of playing cards.
+
+Drawing a card and putting it back randomly into the deck is simulated with the function: =rpgtk-deck-random= (which, if the order and suits are not given, defaults to a standard deck of playing cards). Instead of this function, you might as well make a table (see below).
+
+Drawing one or more cards from a deck (and having a discard pile, so those cards are not redrawn), first, make a /shuffled/ deck with =rpgtk-deck-shuffle= (or =rpgtk-deck-shuffle-standard=), and draw using =rpgtk-deck-draw= (or =rpgtk-deck-deck-draw-cards= for more than one).
+
+For instance, an RPG that tells you to use a standard deck of playing cards, but only use Ace through 6. The RPG uses the /suits/ for different aspects of a character’s life, and the order (number) be the intensity of the situation:
+
+#+begin_src emacs-lisp :results silent
+  (rpgtk-deck-shuffle
+    ;; Instead of numbers, we use some T-shirt sizes:
+    '("XS" "S" "M" "L" "XL" "XXL")
+    ;; We use Hearts Diamonds Clubs and Spades for:
+    '(" Relationship" " at Work" " Project" " in School"))
+    ;; Notice the spaces above.
+#+end_src
+
+This could results in drawing three cards at a complicated point in the character’s life:
+#+begin_example
+Cards: ⸢XL at Work⸥ ⸢S Relationship⸥ ⸢XL in School⸥
+#+end_example
+
+Hrm. Perhaps asking out the crush caused our character to get fired from working at the diner as well as a failing grade in Chemistry. /shrug/
 * Random Tables
 From Random Encounters, to Treasure Tables, to answering, “What’s the
 weather like?” RPGs have relied on randomly choosing entries from
