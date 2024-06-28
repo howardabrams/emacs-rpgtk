@@ -29,6 +29,10 @@
 ;;   - dice tables, where the first column is a specified range, which
 ;;     mimics the tables found in many role-playing game supplements.
 ;;
+;;   - Lisp functions, where a source code file is read/parsed,
+;;     and when a function, `rpgtk-table-choose-<source-code>'
+;;     is called.
+;;
 ;; These types of tables are described later in the code.
 ;;
 ;;; Code:
