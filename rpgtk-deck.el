@@ -42,12 +42,12 @@
 (require 'rpgtk-messages)
 
 (defface rpgtk-deck-red-suit
-  '((t :foreground "tomato" :weight bold))
+  '((t :foreground "tomato" :background "white"))
   "Face for red cards in a standard deck."
   :group 'rpgtk)
 
 (defface rpgtk-deck-black-suit
-  '((t :weight bold))
+  '((t :background "white" :foreground "black"))
   "Face for black cards in a standard deck."
   :group 'rpgtk)
 
@@ -60,8 +60,8 @@ deck, and call `rpgtk-deck-draw' to take the top card from it.")
   (list
     (propertize "♠" 'face 'rpgtk-deck-black-suit)
     (propertize "♣" 'face 'rpgtk-deck-black-suit)
-    (propertize "♡" 'face 'rpgtk-deck-red-suit)
-    (propertize "♢" 'face 'rgptk-deck-red-suit))
+    (propertize "♦" 'face 'rgptk-deck-red-suit)
+    (propertize "♥" 'face 'rpgtk-deck-red-suit))
   "Unicode symbols of a suits of a standard deck of cards.")
 
 (defvar rpgtk-deck-standard-order
@@ -69,8 +69,8 @@ deck, and call `rpgtk-deck-draw' to take the top card from it.")
   "Strings of the ordered numbers of a standard deck of cards.")
 
 (defvar rpgtk-deck-standard-trumps
-  `((,(propertize "🃟" 'face 'rpgtk-deck-black-suit) "Joker")
-    (,(propertize "🂿" 'face 'rpgtk-deck-red-suit) "Joker"))
+  `((,(propertize "☻" 'face 'rpgtk-deck-black-suit) "Joker")
+    (,(propertize "☺" 'face 'rpgtk-deck-red-suit) "Joker"))
   "List of the standard trumps, e.g. Jokers.")
 
 (defun rpgtk-deck-random (&optional order suits)

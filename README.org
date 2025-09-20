@@ -3,6 +3,7 @@
 #+email:  howard@sting
 #+date:   2023-10-01 October
 #+tags:   emacs rpg solottrpg
+#+startup: inlineimages
 
 This project supplies a collection of functions in Emacs Lisp to allow
 developers to craft RPG-inspired programs, with a focus on Solo RPGs
