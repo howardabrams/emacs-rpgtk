@@ -1,0 +1,14 @@
+# Taken from Mythic Bastionlands, pg. 22
+
+Acidic
+Black
+Smoke
+Frozen
+Dead
+Broken
+Colossal
+Living
+Burning
+Sludge
+White
+Sweet

@@ -1,0 +1,14 @@
+# Taken from Mythic Bastionlands, pg. 22
+
+  - Glittering
+  - Violet
+  - Sapphire
+  - Pale
+  - Fiery
+  - Ivory
+  - Slate
+  - Pink
+  - Golden
+  - Bloody
+  - Bright
+  - Inky

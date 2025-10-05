@@ -1,0 +1,14 @@
+# Taken from Mythic Bastionlands
+
+Rain
+Gusts
+Cloud
+Sunlight
+Mist
+Humidity
+Thunder
+Dust
+Warmth
+Drizzle
+Breeze
+Fog

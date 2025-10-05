@@ -1,0 +1,12 @@
+# Originally started from the Cairn RPG:
+
+  - Ambitious
+  - Cautious
+  - Honorable
+  - Humble
+  - Merciful
+  - Serene
+  - Tolerant
+  - Courageous
+  - Disciplined
+  - Gregarious

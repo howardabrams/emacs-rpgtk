@@ -1,0 +1,12 @@
+# Originally started from the Cairn RPG:
+
+  - Bald
+  - Long
+  - Braided
+  - Curly
+  - Filthy
+  - Frizzy
+  - Luxurious
+  - Oily
+  - Wavy
+  - Wispy

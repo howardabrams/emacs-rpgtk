@@ -1,0 +1,14 @@
+# Taken from Mythic Bastionlands, pg. 22
+
+  - Aurora
+  - Haze
+  - Marble
+  - Glow
+  - Billows
+  - Swirl
+  - Streaks
+  - Dapple
+  - Rays
+  - Pillars
+  - Shimmer
+  - Swells

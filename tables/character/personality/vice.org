@@ -1,0 +1,12 @@
+# Originally started from the Cairn RPG:
+
+  - Aggressive
+  - Bitter
+  - Lazy
+  - Craven
+  - Deceitful
+  - Greedy
+  - Nervous
+  - Rude
+  - Vain
+  - Vengeful

@@ -1,0 +1,14 @@
+# Useful for describing the “rain” or the “mist”:
+# Taken from Mythic Bastionlands
+
+Gentle
+Fleeting
+Persistent
+Bright
+Thin
+Cool
+Hot
+Solid
+Faint
+Abundant
+Harsh

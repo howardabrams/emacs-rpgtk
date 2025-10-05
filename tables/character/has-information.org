@@ -1,0 +1,9 @@
+ :  Information an NPC may have
+#+author: Howard X. Abrams
+#+email:  howard.abrams@gmail.com
+#+date:   2024-08-31 August
+#+tags:   rpg ironsworn
+
+Roll on Table: d10
+|  1-7 | <<character/__information-type>> <<character/__information-topic>> |
+| 8-10 | very little   |

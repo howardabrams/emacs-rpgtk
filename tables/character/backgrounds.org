@@ -1,0 +1,46 @@
+#+title:     Player and NPC Backgrounds
+#+author:    Howard X. Abrams
+#+email:     howard.abrams@workday.com
+
+# I suppose I could actually delete many of the rare backgrounds...
+
+ | Acolyte                  | seldom   |
+ | Alchemist (or Scientist) | seldom   |
+ | Athlete                  | rarely   |
+ | Blacksmith               | common   |
+ | Burglar                  | common   |
+ | Butcher                  | common   |
+ | Carpenter                | common   |
+ | Charlatan                | seldom   |
+ | Cleric                   | common   |
+ | Crafter                  | scarcely |
+ | Criminal                 | seldom   |
+ | Fisher                   | common   |
+ | Gambler                  | rarely   |
+ | Gravedigger              | common   |
+ | Herbalist                | common   |
+ | Hermit                   | seldom   |
+ | Hunter                   | common   |
+ | Initiate                 | rarely   |
+ | Inquisitor               | rarely   |
+ | Knight                   | seldom   |
+ | Mercenary                | common   |
+ | Merchant                 | common   |
+ | Miner                    | common   |
+ | Noble                    | rarely   |
+ | Nomad                    | rarely   |
+ | Outlaw                   | common   |
+ | Performer                | common   |
+ | Pirate                   | rarely   |
+ | Prisoner                 | rarely   |
+ | Ranger                   | common   |
+ | Sage / Scholar           | seldom   |
+ | Sailor                   | seldom   |
+ | Servant                  | common   |
+ | Sheriff                  | rarely   |
+ | Shipwright               | rarely   |
+ | Smuggler                 | scarcely |
+ | Soldier                  | seldom   |
+ | Spy                      | rarely   |
+ | Urchin / Pickpocket      | common   |
+ | Vizier                   | rarely   |

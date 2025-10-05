@@ -36,13 +36,16 @@
  ^Dice^                                ^Tables^                ^Messages^
 ────────────────────────────────────────────────────────────────────────────────────
  _o_: Odds (What are the odds?)        _c_: Choose from Table  _m_: Last Messages
- _d_: Roll dice / _D_: Reroll Dice       _t_: Load Tables
- _a_: d20 Advantage / _A_: Disadvantage
- _b_: BitD / _B_: Fate Dice
+ _d_: Roll dice / _D_: Reroll Dice     _s_/_i_: Show or Insert
+ _a_: d20 Advantage / _A_: Disadvantage  _t_: Load Tables
+ _b_: BitD / _B_: Fate Dice              _n_: Show NPC
 ────────────────────────────────────────────────────────────────────────────────────
  _3_: d3  _4_: d4  _6_: d6  _8_: d8  _1_: d10  _@_: d12  _2_: d20  _0_: d100 "
   ("o" rpgtk-odds)
   ("c" rpgtk-tables-choose)
+  ("s" rpgtk-tables-show)
+  ("i" rpgtk-tables-insert)
+  ("n" rpgtk-tables-show-character)
   ("t" rpgtk-tables-load)
 
   ("m" rpgtk-last-message)

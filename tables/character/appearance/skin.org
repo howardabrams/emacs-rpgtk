@@ -1,0 +1,12 @@
+# Originally started from the Cairn RPG:
+
+  - Birthmark
+  - Dark
+  - Elongated
+  - Pockmarked
+  - Rosy
+  - Round
+  - Soft
+  - Tanned
+  - Tattooed
+  - Weathered

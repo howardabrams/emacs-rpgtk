@@ -1,0 +1,10 @@
+# Let’s build a weather system. If it is winter, swap snow for rain:
+
+[ Gentle / Fleeting / Persistent / Cool / Warm / Strong] rain
+[ Gentle / Fleeting / Persistent / Cool / Warm ] drizzle
+[ Distant / Limited / Threatening] thunder
+[ Light / Dense] fog
+[ Gentle / Fleeting / Persistent / Cool / Warm / Strong] wind
+[ Gentle / Fleeting / Persistent / Cool / Warm / Strong] breeze
+[ Fluffy / Few / Heavy / Blanket of] clouds
+Clear with [ high / low] temperatures and [high / low] humidity

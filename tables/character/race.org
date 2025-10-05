@@ -1,0 +1,47 @@
+#+TITLE:  Races for NPC
+#+AUTHOR: Howard X. Abrams
+#+EMAIL:  howard.abrams@workday.com
+#+DATE:   2021-02-02 February
+#+TAGS:   rpg
+
+
+ | human             | common    |
+ | halfling          | uncommon  |
+ | half-elf          | uncommon  |
+ | dwarf             | uncommon  |
+ | half-orc          | rare      |
+ | tiefling          | rare      |
+ | elf               | rare      |
+ | dragonborn        | rare      |
+ | gnome             | rare      |
+ | aarakocra         | rare      |
+ | aasimar           | rare      |
+ | dark elf          | rare      |
+ | deep gnome        | rare      |
+ | gray dwarf        | rare      |
+ | feral tiefling    | rare      |
+ | genasi            | rare      |
+ | goliath           | rare      |
+ | bugbear           | very rare |
+ | firbolg           | very rare |
+ | goblin            | very rare |
+ | hobgoblin         | very rare |
+ | kenku             | very rare |
+ | kobold            | very rare |
+ | lizardfolk        | very rare |
+ | orc               | very rare |
+ | tabaxi            | very rare |
+ | triton            | very rare |
+ | yuan-ti pureblood | very rare |
+ | tortle            | legendary |
+ | leonin            | legendary |
+ | satyr             | legendary |
+ | changeling        | legendary |
+ | shifter           | legendary |
+ | gith              | legendary |
+ | centaur           | legendary |
+ | loxodon           | legendary |
+ | minotaur          | legendary |
+ | vedalken          | legendary |
+ | verdan            | legendary |
+ | locathah          | legendary |

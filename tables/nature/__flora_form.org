@@ -1,0 +1,14 @@
+# Taken from Mythic Bastionlands, pg. 22
+
+Grasses
+Heather
+Shrubs
+Brambles
+Canopy
+Ferns
+Trunks
+Vines
+Conifers
+Saplings
+Reeds
+Roots

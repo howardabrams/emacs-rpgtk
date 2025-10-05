@@ -1,0 +1,14 @@
+# Taken from Mythic Bastionlands, pg. 22
+
+Aromatic
+Ashen
+Blooming
+Twisted
+Towering
+Fruitful
+Stinging
+Vibrant
+Brittle
+Thorny
+Sturdy
+Resinous

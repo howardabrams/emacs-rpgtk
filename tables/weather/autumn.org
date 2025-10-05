@@ -1,21 +1,35 @@
+Weather systems in the later part of the year. Similar to Spring.
+This system was initially taken from Empire Weather
 
- - Raining.  Effects: Heavy Rain, Windy
- - Raining.  Effects: Heavy Rain
- - Drizzle.  Effects: Light Rain
- - Drizzle.  Effects: Light Rain
- - Overcast.  Effects: Windy
- - Overcast.  Effects: Light Fog
- - Overcast.  Effects: Heavy Fog
- - Raining.  Effects: Heavy Rain
- - Raining.  Effects: Heavy Rain, Windy
- - Raining.  Effects: Heavy Rain, Strong Wind
- - Partly Cloudy
- - Partly Cloudy.  Effects: Windy
- - Partly Cloudy.  Effects: Light Fog
- - Clear
- - Clear
- - Clear.  Effects: Windy
- - Hailstorm.  Effects: Hail, Ice
- - Heat Wave.  Effects: Hot
- - Sea Gale.  Effects: Strong Wind
- - Thunderstorm.  Effects: Heavy Rain, Lightning, Strong Wind
+
+- [ Mild / Chilly ], clear, [crisp/ light breezes/ breezy/ windy]
+- [ Mild / Chilly ], cloudy, [crisp/ light breezes/ breezy/ windy]
+- Chilly, cloudy, showers, windy
+- Chilly, hazy, foggy
+- Chilly, overcast, snowflakes, breezy
+- Cold, thunderheads, snowy, stormy
+- Mild, cloudy, showers, breezy
+- Mild, hazy, foggy
+- Warm, clear, breezy
+- Warm, hazy, humid
+
+- Raining.  Effects: Heavy Rain, Windy
+- Raining.  Effects: Heavy Rain
+- Drizzle.  Effects: Light Rain
+- Drizzle.  Effects: Light Rain
+- Overcast.  Effects: Windy
+- Overcast.  Effects: Light Fog
+- Overcast.  Effects: Heavy Fog
+- Raining.  Effects: Heavy Rain
+- Raining.  Effects: Heavy Rain, Windy
+- Raining.  Effects: Heavy Rain, Strong Wind
+- Partly Cloudy
+- Partly Cloudy.  Effects: Windy
+- Partly Cloudy.  Effects: Light Fog
+- Clear
+- Clear
+- Clear.  Effects: Windy
+- Hailstorm.  Effects: Hail, Ice
+- Heat Wave.  Effects: Hot
+- Sea Gale.  Effects: Strong Wind
+- Thunderstorm.  Effects: Heavy Rain, Lightning, Strong Wind

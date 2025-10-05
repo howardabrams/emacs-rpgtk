@@ -1,0 +1,102 @@
+# Taken from Errant RPG
+
+- Acrobat
+- Alewife
+- Antiquarian
+- Apothecary
+- Armpit-hair plucker
+- Baker
+- Ball-fetcher
+- Barber
+- Barrel maker
+- Beadle
+- Bee exterminator
+- Beekeeper
+- Beggar
+- Belt maker
+- Busker
+- Carcass collector
+- Chandler
+- Cheesemaker
+- Cherry picker
+- Chimney sweep
+- Clockwinder
+- Cobbler
+- Confectioner
+- Cooper
+- Cordwainer
+- Costermonger
+- Cup bearer
+- Cutlery vendor
+- Cutpurse
+- Ditch digger
+- Dog walker
+- Dog whipper
+- Dollmaker
+- Ewerer
+- Executioner
+- Fish gutter
+- Flatulist
+- Fletcher
+- Florist
+- Flyter
+- Fortune teller
+- Funeral clown
+- Galley rower
+- Gambler
+- Glove maker
+- Gongfarmer
+- Grave digger
+- Gymnasiarch
+- Haberdasher
+- Hoof trimmer
+- Hunter
+- Ice cutter
+- Jester
+- Jongleur
+- Knock-knobber
+- Knocker-upper
+- Leech collector
+- Market guard
+- Messenger
+- Mountebank
+- Mushroom farmer
+- Nanny
+- Orgy planner
+- Ostrich wrangler
+- Owl vomit collector
+- Palanquin bearer
+- Peddler
+- Pickpocket
+- Poet
+- Portraitist
+- Powder monkey
+- Purefinder
+- Rat catcher
+- Resurrectionist
+- Roofer
+- Sailor
+- Scribe
+- Scullion
+- Seed counter
+- Snake milker
+- Smuggler
+- Sophist
+- Stablehand
+- Stevedore
+- Stone eater
+- Sycophant
+- Tanner
+- Taster
+- Taxidermist
+- Tinker
+- Toad doctor
+- Tosher
+- Town crier
+- Urinatores
+- Usurer
+- Water carrier
+- Wheelwright
+- Whipping boy
+- Whiffler
+100.Worm rancher

@@ -1,0 +1,12 @@
+# Initially started from the Cairn RPG
+
+  - Bony
+  - Broken
+  - Chiseled
+  - Elongated
+  - Pale
+  - Perfect
+  - Rat-like
+  - Sharp
+  - Square
+  - Sunken

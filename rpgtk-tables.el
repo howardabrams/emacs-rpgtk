@@ -1,4 +1,4 @@
-;; rpgtk-tables.el -- Choose item from tables -*- lexical-binding: t; -*-
+;; rpgtk-tableds.el -- Choose item from tables -*- lexical-binding: t; -*-
 ;;
 ;; Copyright (C) 2021 Howard X. Abrams
 ;;
@@ -18,6 +18,9 @@
 ;;
 ;;   - `rpgtk-tables-choose' :: Which, when a table is chosen, returns a
 ;;                              random element.
+;;
+;;   - `rpgtk-tables-show' :: Show the results of a number of random tables
+;;                            based on a template.
 ;;
 ;; The files read can be formatted in the following ways:
 ;;
@@ -48,6 +51,14 @@
     (expand-file-name "tables" lib))
   "Default directory path of tables to load.
 This can be set to nil. See `rpgtk-init' for loading additional tables."
+  :group 'rpgtk
+  :type '(directory))
+
+(defcustom rpgtk-templates-directory
+  (when-let ((lib (seq-find (lambda (f) (string-match (rx "rpgtk" eol) f)) load-path)))
+    (expand-file-name "templates" lib))
+  "Default directory path of templates to load.
+This can be set to nil. See `rpgtk-init' for loading additional templates."
   :group 'rpgtk
   :type '(directory))
 
@@ -602,6 +613,139 @@ function with the `rest' of the rows."
     (make-rpgtk-tables-dice-obj
      :dice dice
      :rows (sort rows (lambda (a b) (< (first a) (first b)))))))
+
+;; Getting a single choice from a table is good, but what if we want a
+;; lot of results, for instance, when generating an NPC or a new
+;; wilderness location, we want to show a buffer with multiple
+;; responses.
+
+(defun rpgtk-tables-template-choose (&optional prompt)
+  "A nice way of choosing a template.
+While the function returns the filename of the chosen template, the user
+is presented with simplified names from the template files in
+`rpgtk-templates-directory',"
+  (unless prompt
+    (setq prompt "Show Template: "))
+  (cl-flet ((convert (file)
+              (cons
+               (thread-last file
+                            (file-name-base)
+                            (replace-regexp-in-string (rx punctuation) " ")
+                            (capitalize)
+                            (string-replace "Npc" "NPC"))
+               file)))
+    (let* ((alst (seq-map #'convert
+                          (directory-files rpgtk-templates-directory
+                                           t (rx bol (not ".")))))
+           (chose (completing-read prompt alst)))
+      (alist-get chose alst nil nil 'equal))))
+
+(defun rpgtk-tables-template-replace ()
+  "Replace tagged tokens with results from `rpgtk-tables-choose'.
+Each tag looks like <<foo/bar>>. Note that a tag may be replaced by
+another <<...>> tag reference, in which case, the function recursively
+addresses all of them."
+  (let ((count 0))
+    (goto-char (point-min))
+    (while (re-search-forward (rx "<<" (group (+? any)) ">>") nil t)
+      (let* ((start (match-beginning 0))
+             (end   (match-end 0))
+             (new-tag (match-string 1))
+             (new-sub (if new-tag (rpgtk-tables-choose-str new-tag) "")))
+        (setq count (1+ count))
+        (message "Replacing %s with %s from %d to %d" new-tag new-sub start end)
+        (goto-char start)
+        (delete-region start end)
+        (insert (or new-sub ""))))
+
+    (when (> count 0)
+      (rpgtk-tables-template-replace))))
+
+(defun rpgtk-tables-template-replace-dice ()
+  "Replace all dice expressions, like 2d6+2, with a number."
+    (goto-char (point-min))
+    (while (re-search-forward rpgtk-dice-roll-regexp nil t)
+      (let* ((start (match-beginning 0))
+             (end   (match-end 0))
+             (value (thread-first (match-string 0)
+                                  (rpgtk-dice-roll-expression-sum)
+                                  (number-to-string))))
+        (goto-char start)
+        (delete-region start end)
+        (insert (or value "")))))
+
+(defun rpgtk-tables-show (template)
+  "Create buffer filled with random values from loaded tables.
+
+The content comes from a TEMPLATE, a file located in the directory,
+`rpgtk-templates-directory' that contains one or more references
+to currently loaded tables, e.g. <<weather/autumn>>
+
+It can also include random numeric values (which will also be replaced),
+allowing a phrase:   2d6 <<monsters/level1>>
+To possibly be replaced with:   5 goblins"
+  (interactive (list (rpgtk-tables-template-choose)))
+  (with-current-buffer-window (thread-last template
+                                           (file-name-base)
+                                           (capitalize)
+                                           (format "*New %s*"))
+      nil nil
+      (insert-file-contents template)
+      (rpgtk-tables-template-replace)
+      (org-mode)))
+
+(defun rpgtk-tables-insert (template)
+  "Insert into the buffer random values from loaded tables.
+
+The content comes from a TEMPLATE, a file located in the directory,
+`rpgtk-templates-directory' that contains one or more references
+to currently loaded tables, e.g. <<weather/autumn>>
+
+It can also include random numeric values (which will also be replaced),
+allowing a phrase:   2d6 <<monsters/level1>>
+To possibly be replaced with:   5 goblins"
+  (interactive (list (rpgtk-tables-template-choose)))
+  (insert
+   (with-temp-buffer
+     (insert-file-contents template)
+     (rpgtk-tables-template-replace)
+     (buffer-string))))
+
+(defun rpgtk-tables-show-character-race ()
+  "Return a name, assuming the `tables' has a `character/name' section."
+  (thread-last rpgtk-tables
+               (hash-table-keys)
+               (seq-filter (lambda (table) (string-match (rx string-start "character/name") table)))
+               (seq-map (lambda (table-name)
+                          (thread-last table-name
+                                       (string-replace "character/name/" "")
+                                       (replace-regexp-in-string "/.*" ""))))))
+
+(defun rpgtk-tables-show-character (race)
+  "Create character-specific buffer filled with random values from loaded tables."
+  (interactive
+   (list (completing-read "Race: "
+                          (append (rpgtk-tables-show-character-race) '("(any)"))
+                          nil t nil nil '("human"))))
+  (when (string-equal race "(any)")
+    (setq race (rpgtk-tables-choose-str "character/race")))
+
+  (with-current-buffer-window "*New Character*" nil nil
+    (insert-file-contents "templates/character.org")
+    (let ((gender (if (= 0 (random 2)) "male" "female")))
+
+      (goto-char (point-min))
+      (while (search-forward "(race)" nil t)
+        (replace-match race nil t))
+
+      (goto-char (point-min))
+      (while (search-forward "(gender)" nil t)
+        (replace-match gender nil t))
+
+      (rpgtk-tables-template-replace)
+      (rpgtk-tables-template-replace-dice))
+    (org-mode)))
+
 
 (provide 'rpgtk-tables)
 ;;; rpgtk-tables.el ends here

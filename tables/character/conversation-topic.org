@@ -1,0 +1,66 @@
+#+title:  Conversation Topics for an NPC
+#+author: Howard X. Abrams
+#+email:  howard.abrams@gmail.com
+#+date:   2024-08-31 August
+#+tags:   rpg ironsworn
+
+  - their own heritage
+  - the heritage of a pc
+  - the heritage of an npc
+  - a source of wealth
+  - the distribution of wealth
+  - where the power lies
+  - local warbands
+  - powerful people
+  - ingenious or outlandish ideas
+  - items of importance
+  - legends of relics
+  - legends of heroic deeds
+  - famous people
+  - famous places
+  - the quickest way to fame
+  - how to curry favor
+  - shifting political alliances
+  - useful contacts
+  - a significant death
+  - the culture of the community
+  - the future of the community
+  - the heritage of the community
+  - the value of experience
+  - the most valuable experiences
+  - rumors of a pc's past
+  - rumors of an npc's past
+  - important social connections
+  - a new life
+  - the current leadership
+  - important political connections
+  - recent political changes
+  - a specific location
+  - general knowledge of a region
+  - the acquisition of knowledge
+  - current events
+  - upcoming events
+  - a personal injury
+  - their own failures
+  - the failures of a pc
+  - the failures of an npc
+  - a recent change in their own family
+  - reported sightings of the firstborn
+  - a recent change in the family of an npc
+  - information that has recently been lost
+  - information that was lost when coming from the old world
+  - information that has recently been discovered
+  - a pc secret that has been made known
+  - an enemy secret that has been made known
+  - gossip about shamed ironlanders and forsaken vows
+  - why the leadership needs to change
+  - history from before the ironlanders
+  - particular skills of a trade or craft
+  - particular equipment of a trade or craft
+  - common knowledge about an enemy
+  - small jobs or quests that need to be done
+  - a recent inaction and the consequences
+  - difficulties in settling the ironlands
+  - the decline of the old world as told to them in childhood
+  - a minor plot point involving an iron vow
+  - a major plot point involving an iron vow

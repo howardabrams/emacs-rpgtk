@@ -1,0 +1,12 @@
+# Originally started from the tables in Cairn:
+
+  - Athletic
+  - Brawny
+  - Flabby
+  - Lanky
+  - Rugged
+  - Scrawny
+  - Short
+  - Statuesque
+  - Stout
+  - Towering

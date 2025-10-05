@@ -1,0 +1,14 @@
+# Taken from Mythic Bastionlands, pg. 22
+
+Flats
+Labyrinth
+Ruins
+Stairs
+Desert
+Craters
+Cavern
+Jungle
+Dunes
+Tunnels
+Island
+Mountain

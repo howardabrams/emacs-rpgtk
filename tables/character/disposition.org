@@ -1,0 +1,42 @@
+#+TITLE:  Character Disposition
+#+AUTHOR: Howard X. Abrams
+#+EMAIL:  howard.abrams@gmail.com
+#+DATE:   2021-12-27 December
+#+TAGS:   rpg ironsworn
+
+ - Helpful
+ - Friendly
+ - Cooperative
+ - Curious
+ - Indifferent
+ - Suspicious
+ - Wanting
+ - Desperate
+ - Demanding
+ - Unfriendly
+ - Threatening
+ - Hostile
+ - Joyful
+ - Excited
+ - Agreeable
+ - Introspective
+ - Bored
+ - Guarded
+ - Veiled
+ - Needy
+ - Grateful
+ - Optimistic
+ - Interested
+ - Distracted
+ - Fearful
+ - Derisive
+ - Disgusted
+ - Hateful
+ - Confused
+ - Annoyed
+ - Obfuscating
+ - Bitter
+ - Nervous
+ - Angry
+ - Disapproving
+ - Combative

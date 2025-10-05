@@ -1,0 +1,21 @@
+#+title: <<character/name/(race)/(gender)>> <<character/name/(race)/last>>
+
+<<character/age-adventuring>> <<character/gender>> (race)
+
+Job: <<character/occupations>>, but currently <<character/activity>>
+
+Knows /<<character/has-information>>/, and might want to talk about /<<character/conversation-topic>>/, but wants to <<character/goal>>.
+*** Appearance
+  - Face: <<character/appearance/face>>
+  - Skin: <<character/appearance/skin>>
+  - Hair: <<character/appearance/hair>>
+  - Physique: <<character/appearance/physique>>
+*** Personality
+  - Speech: <<character/personality/speech>>
+  - Personality: <<character/personality/virtue>>, yet <<character/personality/vice>>
+  - Disposition: <<character/disposition>>
+  - Reputation: <<character/personality/reputation>>
+*** Background
+  - Birthplace: <<character/background/birthplace>>
+  - Alignment: <<character/alignment>>
+  - Raised by: <<character/background/raised-by>>

@@ -1,0 +1,15 @@
+# Taken from Mythic Bastionlands, pg. 22
+
+Brook
+Seat
+Pit
+Cave
+Monolith
+Mound
+Cairn
+Pond
+Waterfall
+Spring
+Arch
+Henge
+Cliff

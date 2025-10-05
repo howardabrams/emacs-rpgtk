@@ -1,0 +1,14 @@
+# Taken from Mythic Bastionlands, pg. 22
+
+  - Crystal
+  - Teal
+  - Pearlescent
+  - Mucky
+  - Cobalt
+  - Verdant
+  - Frosted
+  - Dark
+  - Verdigris
+  - Silver
+  - Emerald
+  - Jade

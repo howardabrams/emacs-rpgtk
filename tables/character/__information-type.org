@@ -1,0 +1,40 @@
+#+title:  Type of Information
+#+author: Howard X. Abrams
+#+email:  howard.abrams@gmail.com
+#+date:   2024-08-31 August
+#+tags:   rpg ironsworn
+
+the location of
+the identity of
+positive news about
+negative news about
+a positive change in
+a negative change in
+a connection between an npc and
+a connection between a pc and
+a connection between an antagonist and
+a significant insight related to
+historical/background knowledge about
+an ambush concerning
+an alteration of
+a physical loss involving
+a mental loss involving
+an emotional loss involving
+a spiritual loss involving
+a financial loss involving
+the loss of an ability involving
+the loss of authority involving
+a material loss involving
+a loss of influence involving
+a loss of opportunity involving
+a physical boon involving
+a mental boon involving
+an emotional boon involving
+a spiritual boon involving
+a financial boon involving
+the acquisition of an ability involving
+the acquisition of authority involving
+a material boon involving
+a gain in influence involving
+an additional opportunity involving
+the truth is the exact opposite of what the pcs thought about

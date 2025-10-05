@@ -1,0 +1,9 @@
+# This is only helpful for pronouns as something to help describe the
+# character.
+
+Roll on Table: d10
+
+  | 1-4 | male (he/him)         |
+  | 5-8 | female (she/her)      |
+  |   9 | ambiguous (they/them) |
+  |  10 | neutral (it/its)      |

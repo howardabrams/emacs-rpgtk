@@ -3,7 +3,10 @@ The weather choices during the early part of the year.
 Notice that we can include commentary at the beginning of the file to
 help explain the table, but in this case, we’ve added /extra
 information/:
-
+Roll Winter WeatherRoll
+Spring Weather I Chilly, cloudy, downpour, breezy 2 Chilly, cloudy, downpour, windy 3 Cold, thunderheads, downpour, stormy 4 Hot, sunny, humid 5 Mild, clear, windy 6 Mild, overcast, drizzle 7 Mild, overcast, showers 8 Mild, sunny, breezy 9 Warm, clear, breezy IO Warm, hazy, humid
+Roll Summer Weather I Hot, clear, breezy 2 Hot, hazy, humid 3 Hot, thunderheads, showers, stormy 4 Mild, clear, windy 5 Mild, hazy, humid 6 Mild, sunny, breezy 7 Sweltering, sunny 8 Warm, clear 9 Warm, sunny, humid Io Warm, thunderheads, humid
+Roll Autumn Weather
  - Snow.  Effects: Cold, Heavy Snow, Windy
  - Snow.  Effects: Cold, Light Snow
  - Sleet Storm.  Effects: Heavy Precipitation, Ice, Windy
