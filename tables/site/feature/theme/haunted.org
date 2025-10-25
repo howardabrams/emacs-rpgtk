@@ -1,0 +1,8 @@
+#+TITLE: Features in a Haunted Place
+
+Roll on Table: d20
+  |   1-4 | Tomb or burial site                   |
+  |   5-8 | Blood was spilled here                |
+  |  9-12 | Unnatural mists or darkness           |
+  | 13-16 | Messages from beyond the grave        |
+  | 17-20 | Apparitions of a person or event      |

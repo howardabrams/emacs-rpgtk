@@ -1,0 +1,8 @@
+#+TITLE: Features in an Infested Location
+
+Roll on Table: d20
+  |   1-4 | Inhabited nest                        |
+  |   5-8 | Abandoned nest                        |
+  |  9-12 | Ravaged terrain or architecture       |
+  | 13-16 | Remains or carrion                    |
+  | 17-20 | Hoarded food                          |

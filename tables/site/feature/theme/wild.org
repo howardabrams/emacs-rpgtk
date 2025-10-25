@@ -1,0 +1,8 @@
+#+TITLE: Features of a Wild Place
+
+Roll on Table: d20
+  |   1-4 | Denizen’s lair                         |
+  |   5-8 | Territorial markings                   |
+  |  9-12 | Impressive flora or fauna              |
+  | 13-16 | Hunting ground or watering hole        |
+  | 17-20 | Remains or carrion                     |

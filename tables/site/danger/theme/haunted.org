@@ -1,0 +1,15 @@
+#+TITLE: Dangers in a Haunted Place
+
+Roll on Table: d30
+  |   1-5 | Denizen haunts this area              |
+  |  6-10 | Unsettling sounds or foreboding signs |
+  | 11-12 | Denizen attacks without warning       |
+  | 13-14 | Denizen makes a costly demand         |
+  | 15-16 | Denizen seizes your body or mind      |
+  | 17-18 | Denizen taunts or lures you           |
+  | 19-20 | A disturbing truth is revealed        |
+  | 21-22 | Frightening visions                   |
+  | 23-24 | The environment is used against you   |
+  | 25-26 | Trickery leads you astray             |
+  | 27-28 | True nature of this place is revealed |
+  | 29-30 | Sudden, shocking manifestation        |

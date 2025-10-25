@@ -1,0 +1,17 @@
+#+title: Denizens of an Ancient Ruin
+
+Roll on Table: d100
+
+Thrall
+  |  1-27 | Thrall, Delve, p. 131         |
+  | 28-41 | Broken, Ironsworn, p. 138     |
+  | 42-55 | Nightspawn, Delve, p. 125     |
+  | 56-69 | Varou, Ironsworn, p. 146      |
+  | 70-75 | Husk, Delve, p. 110           |
+  | 76-81 | Mystic, Ironsworn, p. 140     |
+  | 82-87 | Hollow, Ironsworn, p. 160     |
+  | 88-93 | Husk, Delve, p. 110           |
+  | 94-95 | Frostbound, Ironsworn, p. 158 |
+  | 96-97 | Glimmer, Delve, p. 142        |
+  | 98-99 | Zealot, Delve, p. 111         |
+  |   100 | Chitter, Delve                |

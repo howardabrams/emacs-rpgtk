@@ -1,0 +1,8 @@
+#+TITLE: Features of a Ravaged Land
+
+Roll on Table: d20
+  |   1-4 | Path of destruction                    |
+  |   5-8 | Abandoned or ruined dwelling           |
+  |  9-12 | Untouched or preserved area            |
+  | 13-16 | Traces of what was lost                |
+  | 17-20 | Ill-fated victims                      |

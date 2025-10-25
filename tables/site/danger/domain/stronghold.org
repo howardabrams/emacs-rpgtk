@@ -1,0 +1,7 @@
+#+TITLE: Dangers in a Stronghold
+
+  - Blocked or guarded path
+  - Caught in the open
+  - Chokepoint
+  - Trap
+  - Alarm trigger

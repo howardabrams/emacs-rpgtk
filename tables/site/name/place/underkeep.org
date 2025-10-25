@@ -1,0 +1,12 @@
+Catacomb
+Chambers
+Den
+Hall
+Labryinth
+Maze
+Pit
+Sanctum
+Underkeep
+Vault
+Underhalls
+Halls

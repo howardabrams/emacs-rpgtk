@@ -1,0 +1,56 @@
+#+TITLE:  Site Name: Namesake
+#+AUTHOR: Howard X. Abrams
+#+EMAIL:  howard.abrams@gmail.com
+#+DATE:   2021-12-27 December
+#+TAGS:   rpg ironsworn
+
+Akida
+Andor
+Arnorr
+Aurvang
+Breckon
+Callwen
+Dain
+Edda
+Erisia
+Etana
+Eysa
+Farina
+Garion
+Haldorr
+Issara
+Jorund
+Kajir
+Kalida
+Katarra
+Keeara
+Keelan
+Kenrick
+Khulan
+Kodroth
+Kolor
+Kynan
+Lindar
+Milenna
+Morien
+Morraine
+Nyrad
+Radek
+Saiven
+Zhan
+Ildar
+Thrain
+Jadina
+Sidura
+Sithra
+Solana
+Thorval
+Thyri
+Torgan
+Valgard
+Willa
+Wulan
+Wyland
+Yala
+Zakaria
+Svala

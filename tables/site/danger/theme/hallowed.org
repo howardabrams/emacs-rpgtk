@@ -1,0 +1,15 @@
+#+TITLE: Dangers in a Hallowed Location
+
+Roll on Table: d30
+  |   1-5 | Denizen defends their sanctum        |
+  |  6-10 | Denizen enacts the will of their god |
+  | 11-12 | Denizen seeks martyrdom              |
+  | 13-14 | Secret of the faith is revealed      |
+  | 15-16 | Greater purpose is revealed          |
+  | 17-18 | Unexpected disciples are revealed    |
+  | 19-20 | Divine manifestations                |
+  | 21-22 | Aspect of the faith beguiles you     |
+  | 23-24 | Unexpected leader is revealed        |
+  | 25-26 | Embodiment of a god or myth          |
+  | 27-28 | Protective ward or barrier           |
+  | 29-30 | Prophecies reveal a dark fate        |

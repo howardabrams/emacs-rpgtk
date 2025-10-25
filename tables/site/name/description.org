@@ -1,0 +1,56 @@
+#+TITLE:  Site Name: Description
+#+AUTHOR: Howard X. Abrams
+#+EMAIL:  howard.abrams@gmail.com
+#+DATE:   2021-12-26 December
+#+TAGS:   rpg ironsworn
+
+Abyssal
+Ashen
+Barren
+Black
+Blighted
+Bloodied
+Bloodstained
+Broken
+Chaotic
+Crimson
+Crumbling
+Cursed
+Dark
+Deep
+Desecrated
+Dreaded
+Elder
+Endless
+Fallen
+Fell
+Flooded
+Forbidden
+Forgotten
+Forsaken
+Frozen
+Grey
+Grim
+Haunted
+Hidden
+High
+Infernal
+Iron
+Lost
+Nightmare
+Ruined
+Sacred
+Scarred
+Scorched
+Secret
+Shattered
+Shrouded
+Silent
+Silver
+Sundered
+Sunken
+Tainted
+Undying
+Unknown
+Wasted
+White

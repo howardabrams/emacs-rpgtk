@@ -1,0 +1,55 @@
+#+TITLE:  Site Name Detail
+#+AUTHOR: Howard X. Abrams
+#+EMAIL:  howard.abrams@gmail.com
+#+TAGS:   rpg ironsworn
+
+Ash
+Bane
+Banishment
+Blades
+Blight
+Blood
+Bone
+Corruption
+Darkness
+Daybreak
+Desolation
+Despair
+Doom
+Dread
+Fate
+Frost
+Fury
+Gloom
+Hope
+Iron
+Isolation
+Lament
+Lies
+Light
+Madness
+Mist
+Nightfall
+Power
+Prophecy
+Rot
+Runes
+Sadness
+Sanctuary
+Secrets
+Shadow
+Silence
+Souls
+Specters
+Spring
+Stone
+Storms
+Strife
+Terror
+Torment
+Treachery
+Truth
+Twilight
+War
+Winter
+Wrath

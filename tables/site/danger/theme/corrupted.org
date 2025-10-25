@@ -1,0 +1,15 @@
+#+TITLE: Dangers in a Corrupted Location
+
+Roll on Table: d30
+  |   1-5 | Denizen spawned from dark magic       |
+  |  6-10 | Denizen controls dark magic           |
+  | 11-12 | Denizen corrupted by dark magic       |
+  | 13-14 | Corruption marks you                  |
+  | 15-16 | Innocents held in thrall              |
+  | 17-18 | Revelations of a terrible truth       |
+  | 19-20 | Mystic trap or trigger                |
+  | 21-22 | Mystic barrier or ward                |
+  | 23-24 | Illusions lead you astray             |
+  | 25-26 | Dark ritual in progress               |
+  | 27-28 | Lingering effects of a dark ritual    |
+  | 29-30 | Dread harbingers of a greater magic   |

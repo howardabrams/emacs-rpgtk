@@ -1,0 +1,15 @@
+#+TITLE: Dangers in a Fortified Location
+
+Roll on Table: d30
+  |   1-5 | Denizen patrols the area         |
+  |  6-10 | Denizen on guard                 |
+  | 11-12 | Denizen ready to sound the alarm |
+  | 13-14 | Denizen sets an ambush           |
+  | 15-16 | Denizen lures you into a trap    |
+  | 17-18 | Denizens converge on this area   |
+  | 19-20 | Pets or underlings               |
+  | 21-22 | Unexpected alliance revealed     |
+  | 23-24 | Nefarious plans revealed         |
+  | 25-26 | Unexpected leader revealed       |
+  | 27-28 | Trap                             |
+  | 29-30 | Alarm trigger                    |

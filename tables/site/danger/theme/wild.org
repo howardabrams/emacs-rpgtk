@@ -1,0 +1,15 @@
+#+TITLE: Dangers of a Wild Place
+
+Roll on Table: d30
+  |   1-5 | Denizen hunts                          |
+  |  6-10 | Denizen strikes without warning        |
+  | 11-12 | Denizen leverages the environment      |
+  | 13-14 | Denizen wields unexpected abilities    |
+  | 15-16 | Denizen guided by a greater threat     |
+  | 17-18 | Denizen protects something             |
+  | 19-20 | Hazardous terrain                      |
+  | 21-22 | Weather or environmental threat        |
+  | 23-24 | Benign aspect becomes a threat         |
+  | 25-26 | Overzealous hunter                     |
+  | 27-28 | Disturbing evidence of a victim’s fate |
+  | 29-30 | Ill-fated victim in danger             |

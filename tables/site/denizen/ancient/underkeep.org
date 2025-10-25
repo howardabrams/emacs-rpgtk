@@ -1,0 +1,14 @@
+#+title: Denizens of an Ancient Underkeep
+
+  | 01-27 | Trog, Delve, p. 120                  |
+  | 28-41 | Nightspawn, Delve, p. 125            |
+  | 42-55 | Deep Rat, Delve, p. 117              |
+  | 56-69 | Wight, Delve, p. 132                 |
+  | 70-75 | Shadow Dog                           |
+  | 76-81 | Gloom, Delve, p. 144                 |
+  | 82-87 | Mystic Ironlander, Ironsworn, p. 140 |
+  | 88-93 | Nightmare Spider, Delve, p. 118      |
+  | 94-95 | Iron-Wracked Beast, Delve, p. 123    |
+  | 96-97 | Mystic Ironlander, Ironsworn, p. 140 |
+  | 98-99 | Glimmer, Delve, p. 142               |
+  |   100 | Monstrosity                          |

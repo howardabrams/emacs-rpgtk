@@ -1,0 +1,11 @@
+Citadel
+Enclave
+Fortress
+Hall
+Keep
+Sanctuary
+Sanctum
+Spire
+Temple
+Tower
+Castle

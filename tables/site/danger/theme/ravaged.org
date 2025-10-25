@@ -1,0 +1,15 @@
+#+TITLE: Dangers of a Ravaged Land
+
+Roll on Table: d30
+  |   1-5 | Precarious architecture or terrain     |
+  |  6-10 | Imminent collapse or destruction       |
+  | 11-12 | Path undermined                        |
+  | 13-14 | Blocked or broken path                 |
+  | 15-16 | Vestiges of a destructive force        |
+  | 17-18 | Unexpected environmental threat        |
+  | 19-20 | Echoes of a troubling past             |
+  | 21-22 | Signs of a horrible fate               |
+  | 23-24 | Denizen seeks retribution              |
+  | 25-26 | Denizen leverages the environment      |
+  | 27-28 | Denizen restores what was lost         |
+  | 29-30 | Ravages return anew                    |

@@ -1,0 +1,8 @@
+#+TITLE: Features in a Fortified Location
+
+Roll on Table: d20
+  |   1-4 | Camp or quarters                     |
+  |   5-8 | Guarded location                     |
+  |  9-12 | Storage or repository                |
+  | 13-16 | Work or training area                |
+  | 17-20 | Command center or leadership         |

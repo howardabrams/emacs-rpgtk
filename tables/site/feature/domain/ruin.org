@@ -1,0 +1,15 @@
+#+TITLE: Features found in Ruins
+
+Roll on Table: d80 + 20
+  | 21-43 | Crumbling corridors and chambers |
+  | 44-56 | Collapsed architecture           |
+  | 57-64 | Rubble-choked hall               |
+  | 65-68 | Courtyard                        |
+  | 69-72 | Archive or library               |
+  | 73-76 | Broken statuary or fading murals |
+  | 77-80 | Preserved vault                  |
+  | 81-84 | Temple to forgotten gods         |
+  | 85-88 | Mausoleum                        |
+  | 89-98 | Something unusual or unexpected  |
+  |    99 | You transition into a new theme  |
+  |   100 | You transition into a new domain |

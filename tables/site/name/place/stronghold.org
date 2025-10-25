@@ -1,0 +1,10 @@
+Bastion
+Citadel
+Fortress
+Garrison
+Haven
+Keep
+Outpost
+Refuge
+Watch
+Tower

@@ -1,0 +1,10 @@
+Bog
+Fen
+Lowland
+Marsh
+Mire
+Morass
+Quagmire
+Floodlands
+Slough
+Wetlands

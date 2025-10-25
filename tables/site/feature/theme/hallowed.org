@@ -1,0 +1,8 @@
+#+TITLE: Features in a Hallowed Location
+
+Roll on Table: d20
+  |   1-4 | Temple or altar              |
+  |   5-8 | Offerings or atonements      |
+  |  9-12 | Religious relic or idol      |
+  | 13-16 | Consecrated ground           |
+  | 17-20 | Dwellings or gathering place |

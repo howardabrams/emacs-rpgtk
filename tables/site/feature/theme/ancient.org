@@ -1,0 +1,8 @@
+#+TITLE: Features in an Ancient Location
+
+Roll on Table: d20
+  |   1-4 | Evidence of lost knowledge            |
+  |   5-8 | Inscrutable relics                    |
+  |  9-12 | Ancient artistry or craft             |
+  | 13-16 | Preserved corpses or fossils          |
+  | 17-20 | Visions of this place in another time |

@@ -1,0 +1,15 @@
+#+TITLE: Dangers in an Ancient Location
+
+Roll on Table: d30
+  |   1-5 | Ancient trap                          |
+  |  6-10 | Hazardous architecture or terrain     |
+  | 11-12 | Blocked or broken path                |
+  | 13-14 | Denizen protects an ancient secret    |
+  | 15-16 | Denizen reveres an ancient power      |
+  | 17-18 | Living relics of a lost age           |
+  | 19-20 | Ancient evil resurgent                |
+  | 21-22 | Dire warnings of a long-buried danger |
+  | 23-24 | Ancient disease or contamination      |
+  | 25-26 | Artifact of terrible meaning or power |
+  | 27-28 | Disturbing evidence of ancient wrongs |
+  | 29-30 | Others seek power or knowledge        |

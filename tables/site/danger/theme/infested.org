@@ -1,0 +1,15 @@
+#+TITLE: Dangers in an Infested Location
+
+Roll on Table: d30
+  |   1-5 | Denizens swarm and attack             |
+  |  6-10 | Toxic or sickening environment        |
+  | 11-12 | Denizen stalks you                    |
+  | 13-14 | Denizen takes or destroys something   |
+  | 15-16 | Denizen reveals surprising cleverness |
+  | 17-18 | Denizen guided by a greater threat    |
+  | 19-20 | Denizen blocks the path               |
+  | 21-22 | Denizen funnels you down a new path   |
+  | 23-24 | Denizen undermines the path           |
+  | 25-26 | Denizen lays in wait                  |
+  | 27-28 | Trap or snare                         |
+  | 29-30 | Victim’s horrible fate is revealed    |

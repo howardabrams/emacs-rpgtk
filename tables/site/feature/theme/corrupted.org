@@ -1,0 +1,8 @@
+#+TITLE: Features in a Corrupted Location
+
+Roll on Table: d20
+  |   1-4 | Mystic focus or conduit               |
+  |   5-8 | Strange environmental disturbances    |
+  |  9-12 | Mystic runes or markings              |
+  | 13-16 | Blight or decay                       |
+  | 17-20 | Evidence of a foul ritual             |

@@ -1,0 +1,14 @@
+#+TITLE:  Site Nature: Theme
+#+AUTHOR: Howard X. Abrams
+#+EMAIL:  howard.abrams@gmail.com
+#+DATE:   2021-12-27 December
+#+TAGS:   rpg ironsworn
+
+Ancient
+Corrupted
+Fortified
+Hallowed
+Haunted
+Infested
+Ravaged
+Wild

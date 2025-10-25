@@ -1,0 +1,15 @@
+#+TITLE: Features of a Sea Cave
+
+Roll on Table: d80 + 20
+  | 21-43 | Watery tunnels                   |
+  | 44-56 | Eroded chamber                   |
+  | 57-64 | Flooded chamber                  |
+  | 65-68 | Vast chamber                     |
+  | 69-72 | Dry passages                     |
+  | 73-76 | Freshwater inlet                 |
+  | 77-80 | Rocky island                     |
+  | 81-84 | Waterborne debris                |
+  | 85-88 | Shipwreck or boat                |
+  | 89-98 | Something unusual or unexpected  |
+  |    99 | You transition into a new theme  |
+  |   100 | You transition into a new domain |

@@ -1,0 +1,15 @@
+#+TITLE: Features in a Mine
+
+Roll on Table: d80 + 20
+  | 21-43 | Cramped tunnels                  |
+  | 44-56 | Mine works                       |
+  | 57-64 | Excavated chamber                |
+  | 65-68 | Mineshaft                        |
+  | 69-72 | Collapsed tunnel                 |
+  | 73-76 | Cluttered storage                |
+  | 77-80 | Housing or common areas          |
+  | 81-84 | Flooded chamber                  |
+  | 85-88 | Unearthed secret                 |
+  | 89-98 | Something unusual or unexpected  |
+  |    99 | You transition into a new theme  |
+  |   100 | You transition into a new domain |
