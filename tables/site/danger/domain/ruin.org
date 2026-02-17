@@ -3,5 +3,5 @@
  -  Ancient mechanism or trap
  -  Collapsing wall or ceiling
  -  Blocked or broken passage
- -  Unstable floor above a new danger
+ -  Unstable floor hides a new danger
  -  Ancient secrets best left buried

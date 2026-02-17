@@ -95,7 +95,7 @@ Should be an integer number, often of a single digit.")
 ;;            "very rare" ("imp")
 ;;            "legendary" ("demon"))))
 
-;; The following functions are wrapers around the variable, and return
+;; The following functions are wrappers around the variable, and return
 ;; the variable, unless it is either nil or PREFIX is not nil, and
 ;; then it prompts for it, and caches the results in the global
 ;; variable:
@@ -156,7 +156,7 @@ denizens by using `rpgtk-site-denizens-parse', otherwise, call
     (setq rpgtk-site-denizens (make-hash-table :test 'equal))
     (if (not (region-active-p))
         (rpgtk-site-denizens-prompt)
-      (rpgtk-site-denizens-parse)
+      (rpgtk-site-denizens-parse (region-beginning) (region-end))
       (goto-char (region-end))))
   rpgtk-site-denizens)
 
@@ -283,7 +283,7 @@ currently stored theme. Same with the domain."
 If PREFIX is given, pass that to helper functions to define a new
 site, see the functions (not variables, this is a Lisp-2 after
 all) of `rpgtk-site-theme', `rpgtk-site-deomain', etc."
-  (seq-let (theme domain denizens total-progress)
+  (seq-let (theme domain total-progress denizens)
       (rpgtk-site-parts prefix)
     (let* (progress opportunity danger
            (feature (rpgtk-site-feature theme domain))
